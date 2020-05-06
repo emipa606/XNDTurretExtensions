@@ -3,29 +3,6 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-
-/*
-    public override ThingRequest PotentialWorkThingRequest
-    {
-      get
-      {
-        return ThingRequest.ForGroup(ThingRequestGroup.BuildingFrame);
-      }
-    }
-
-    public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
-    {
-      if (t.Faction != pawn.Faction)
-        return (Job) null;
-      if (!(t is Frame frame))
-        return (Job) null;
-      if (GenConstruct.FirstBlockingThing((Thing) frame, pawn) != null)
-        return GenConstruct.HandleBlockingThingJob((Thing) frame, pawn, forced);
-      bool checkSkills = this.def.workType == WorkTypeDefOf.Construction;
-      return !GenConstruct.CanConstruct((Thing) frame, pawn, checkSkills, forced) ? (Job) null : this.ResourceDeliverJobFor(pawn, (IConstructible) frame, true);
-    }
-*/
-
 namespace TurretExtensions
 {
     [UsedImplicitly]
