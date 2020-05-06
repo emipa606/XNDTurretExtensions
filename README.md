@@ -18,4 +18,6 @@ If you want to help testing, please download this repo (Clone or Download -> Dow
 - Error on Selecting a Turret, see also [#1](/../../issues/1)
 
 # LICENSE
-This fork is licensed under MPL2.0, the original project (not this one) is licensed under MIT.
+This fork is licensed under MPL2.0, the original project (not this one) is licensed under MIT. See the image for proof:
+![NetrveQuestionLicense](https://i.imgur.com/GuT0PKy.png)
+![XeoNovaDanQuote](https://i.imgur.com/ZUbieUI.png)
