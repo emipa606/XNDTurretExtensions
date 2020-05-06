@@ -1,35 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
-
     public static class Patch_Verb
     {
-
         [HarmonyPatch(typeof(Verb), nameof(Verb.DrawHighlight))]
         public static class DrawHighlight
         {
-
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilGen)
             {
-                #if DEBUG
+#if DEBUG
                     Log.Message("Transpiler start: Verb.DrawHighlight (no matches)");
-                #endif
+#endif
 
                 var instructionList = instructions.ToList();
                 var drawRadiusRingInfo = AccessTools.Method(typeof(VerbProperties), nameof(VerbProperties.DrawRadiusRing));
-                var tryDrawFiringConeInfo = AccessTools.Method(typeof(DrawHighlight), nameof(DrawHighlight.TryDrawFiringCone));
+                var tryDrawFiringConeInfo = AccessTools.Method(typeof(DrawHighlight), nameof(TryDrawFiringCone));
 
                 var instructionToBranchTo = instructionList[instructionList.FirstIndexOf(i => i.OperandIs(drawRadiusRingInfo)) + 1];
                 var branchLabel = ilGen.DefineLabel();
@@ -47,36 +38,28 @@ namespace TurretExtensions
 
                 */
 
-                for (int i = 0; i < instructionList.Count; i++)
-                    yield return instructionList[i];
-
+                foreach (var ci in instructionList)
+                    yield return ci;
             }
 
             private static bool TryDrawFiringCone(Verb instance)
             {
-                if (instance.Caster is Building_Turret turret && TurretExtensionsUtility.FiringArcFor(turret) < 360)
-                {
-                    TurretExtensionsUtility.TryDrawFiringCone(turret, instance.verbProps.range);
-                    return true;
-                }
-                return false;
+                if (!(instance.Caster is Building_Turret turret) || !(TurretExtensionsUtility.FiringArcFor(turret) < 360)) return false;
+                
+                TurretExtensionsUtility.TryDrawFiringCone(turret, instance.verbProps.range);
+                return true;
             }
-
         }
 
         [HarmonyPatch(typeof(Verb), nameof(Verb.CanHitTargetFrom))]
         public static class CanHitTargetFrom
         {
-
             public static void Postfix(Verb __instance, LocalTargetInfo targ, ref bool __result)
             {
                 // Also take firing arc into consideration if the caster is a turret
                 if (__instance.Caster is Building_Turret && !targ.Cell.WithinFiringArcOf(__instance.caster))
                     __result = false;
             }
-
         }
-
     }
-
 }

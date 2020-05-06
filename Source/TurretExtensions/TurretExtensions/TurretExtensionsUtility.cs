@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RimWorld;
 using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace TurretExtensions
 {
     public static class TurretExtensionsUtility
     {
-
         public static bool IsUpgradable(this ThingDef def, out CompProperties_Upgradable upgradableCompProps)
         {
             upgradableCompProps = def.GetCompProperties<CompProperties_Upgradable>();
@@ -25,7 +23,7 @@ namespace TurretExtensions
 
         public static bool IsUpgraded(this Thing thing, out CompUpgradable upgradableComp)
         {
-            bool upgradable = thing.IsUpgradable(out upgradableComp);
+            var upgradable = thing.IsUpgradable(out upgradableComp);
             return upgradable && upgradableComp.upgraded;
         }
 
@@ -41,8 +39,9 @@ namespace TurretExtensions
 
         public static float AdjustedFuelCapacity(float baseFuelCapacity, Thing t)
         {
-            if (t.IsUpgraded(out CompUpgradable upgradableComp))
+            if (t.IsUpgraded(out var upgradableComp))
                 return baseFuelCapacity * upgradableComp.Props.fuelCapacityFactor;
+            
             return baseFuelCapacity;
         }
 
@@ -55,25 +54,25 @@ namespace TurretExtensions
             if (extensionValues.useManningPawnAimingDelayFactor)
             {
                 var mannableComp = turret.TryGetComp<CompMannable>();
-                if (mannableComp != null)
+                var manningPawn = mannableComp?.ManningPawn;
+                if (manningPawn != null)
                 {
-                    var manningPawn = mannableComp.ManningPawn;
-                    if (manningPawn != null)
-                    {
-                        float manningPawnAimingDelayFactor = manningPawn.GetStatValue(StatDefOf.AimingDelayFactor);
-                        warmupTicksFloat *= manningPawnAimingDelayFactor;
-                    }
+                    var manningPawnAimingDelayFactor = manningPawn.GetStatValue(StatDefOf.AimingDelayFactor);
+                    warmupTicksFloat *= manningPawnAimingDelayFactor;
                 }
             }
 
             // Multiply based on upgrade
-            if (turret.IsUpgraded(out CompUpgradable upgradableComp))
+            if (turret.IsUpgraded(out var upgradableComp))
                 warmupTicksFloat *= upgradableComp.Props.turretBurstWarmupTimeFactor;
 
             return Mathf.RoundToInt(warmupTicksFloat);
         }
 
-        public static string ToStringDegrees(this float degrees) => degrees.ToString("0.#") + "°";
+        public static string ToStringDegrees(this float degrees)
+        {
+            return degrees.ToString("0.#") + "°";
+        }
 
         public static bool WithinFiringArcOf(this IntVec3 pos, Thing thing)
         {
@@ -82,17 +81,13 @@ namespace TurretExtensions
 
         public static bool WithinFiringArcOf(this IntVec3 pos, IntVec3 pos2, Rot4 rot, float firingArc)
         {
-            return GenGeo.AngleDifferenceBetween(rot.AsAngle, (pos - pos2).AngleFlat) <= (firingArc / 2);
+            return GenGeo.AngleDifferenceBetween(rot.AsAngle, (pos - pos2).AngleFlat) <= firingArc / 2;
         }
 
         public static float FiringArcFor(Thing thing)
         {
-            // Upgraded and defined firing arc
-            if (thing.IsUpgraded(out CompUpgradable upgradableComp))
-                return upgradableComp.Props.FiringArc;
-
-            // Defined firing arc
-            return TurretFrameworkExtension.Get(thing.def).FiringArc;
+            // Upgraded and defined firing arc ; Defined firing arc
+            return thing.IsUpgraded(out var upgradableComp) ? upgradableComp.Props.FiringArc : TurretFrameworkExtension.Get(thing.def).FiringArc;
         }
 
         public static bool TryDrawFiringCone(Building_Turret turret, float distance)
@@ -102,35 +97,35 @@ namespace TurretExtensions
 
         public static bool TryDrawFiringCone(IntVec3 centre, Rot4 rot, float distance, float arc)
         {
-            if (arc < 360)
+            if (!(arc < 360)) return false;
+            
+            if (distance > GenRadial.MaxRadialPatternRadius)
             {
-                if (distance > GenRadial.MaxRadialPatternRadius)
-                {
-                    if (!(bool)NonPublicFields.GenDraw_maxRadiusMessaged.GetValue(null))
-                    {
-                        Log.Error("Cannot draw radius ring of radius " + distance + ": not enough squares in the precalculated list.", false);
-                        NonPublicFields.GenDraw_maxRadiusMessaged.SetValue(null, true);
-                    }
-                    return false;
-                }
-                var ringDrawCells = (List<IntVec3>)NonPublicFields.GenDraw_ringDrawCells.GetValue(null);
-                ringDrawCells.Clear();
-                int num = GenRadial.NumCellsInRadius(distance);
-                for (int i = 0; i < num; i++)
-                {
-                    var curCell = centre + GenRadial.RadialPattern[i];
-                    if (curCell.WithinFiringArcOf(centre, rot, arc))
-                        ringDrawCells.Add(curCell);
-                }
-                GenDraw.DrawFieldEdges(ringDrawCells);
-                return true;
+                if ((bool) NonPublicFields.GenDraw_maxRadiusMessaged.GetValue(null)) return false;
+                    
+                Log.Error("Cannot draw radius ring of radius " + distance + ": not enough squares in the precalculated list.");
+                NonPublicFields.GenDraw_maxRadiusMessaged.SetValue(null, true);
+
+                return false;
             }
-            return false;
+
+            var ringDrawCells = (List<IntVec3>) NonPublicFields.GenDraw_ringDrawCells.GetValue(null);
+            ringDrawCells.Clear();
+            var num = GenRadial.NumCellsInRadius(distance);
+            for (var i = 0; i < num; i++)
+            {
+                var curCell = centre + GenRadial.RadialPattern[i];
+                if (curCell.WithinFiringArcOf(centre, rot, arc))
+                    ringDrawCells.Add(curCell);
+            }
+
+            GenDraw.DrawFieldEdges(ringDrawCells);
+            return true;
         }
 
         public static string UpgradeReadoutReportText(StatRequest req)
         {
-            var tDef = (ThingDef)req.Def;
+            var tDef = (ThingDef) req.Def;
             var upgradeProps = tDef.GetCompProperties<CompProperties_Upgradable>();
 
             // First paragraph
@@ -144,7 +139,7 @@ namespace TurretExtensions
                 var upgradeComp = req.Thing?.TryGetComp<CompUpgradable>();
                 var extensionValues = TurretFrameworkExtension.Get(tDef);
                 var defaultStuff = GenStuff.DefaultStuffFor(tDef);
-                bool hasThing = req.HasThing;
+                var hasThing = req.HasThing;
 
                 // Description
                 reportBuilder.AppendLine($"{"Description".Translate()}: {upgradeProps.description}");
@@ -156,11 +151,7 @@ namespace TurretExtensions
                     reportBuilder.AppendLine($"{"TurretExtensions.TurretResourceRequirements".Translate()}:");
 
                     var usedCostList = upgradeComp != null ? upgradeComp.finalCostList : upgradeProps.costList;
-                    for (int i = 0; i < usedCostList.Count; i++)
-                    {
-                        var curCost = usedCostList[i];
-                        reportBuilder.AppendLine($"- {curCost.count}x {curCost.thingDef.LabelCap}");
-                    }
+                    foreach (var curCost in usedCostList) reportBuilder.AppendLine($"- {curCost.count}x {curCost.thingDef.LabelCap}");
 
                     if (!hasThing && upgradeProps.costStuffCount > 0)
                         reportBuilder.AppendLine($"- {upgradeProps.costStuffCount}x {"StatsReport_Material".Translate()}");
@@ -179,8 +170,8 @@ namespace TurretExtensions
                     reportBuilder.AppendLine();
                     reportBuilder.AppendLine($"{"ResearchPrerequisites".Translate()}:");
 
-                    for (int i = 0; i < upgradeProps.researchPrerequisites.Count; i++)
-                        reportBuilder.AppendLine($"- {upgradeProps.researchPrerequisites[i].LabelCap}");
+                    foreach (var researchDef in upgradeProps.researchPrerequisites)
+                        reportBuilder.AppendLine($"- {researchDef.LabelCap}");
                 }
 
                 // Upgrade bonuses
@@ -201,56 +192,57 @@ namespace TurretExtensions
                 {
                     statsModified = statsModified.Distinct().ToList();
                     statsModified.SortBy(s => s.LabelCap.RawText);
-                    for (int i = 0; i < statsModified.Count; i++)
+                    foreach (var curStat in statsModified)
                     {
-                        var curStat = statsModified[i];
                         var stringStyle = curStat.toStringStyle;
                         var numberSense = curStat.toStringNumberSense;
                         var preStatValue = hasThing ? req.Thing.GetStatValue(curStat) : tDef.GetStatValueAbstract(curStat, defaultStuff);
-                        float postStatValue = preStatValue;
+                        var postStatValue = preStatValue;
                         if (upgradeProps.statOffsets?.StatListContains(curStat) == true)
                             postStatValue += upgradeProps.statOffsets.GetStatOffsetFromList(curStat);
                         if (upgradeProps.statFactors?.StatListContains(curStat) == true)
                             postStatValue *= upgradeProps.statFactors.GetStatFactorFromList(curStat);
-                        reportBuilder.AppendLine($"- {curStat.LabelCap}: {preStatValue.ToStringByStyle(stringStyle, numberSense)} => {postStatValue.ToStringByStyle(stringStyle, numberSense)}");
+                        reportBuilder.AppendLine(
+                            $"- {curStat.LabelCap}: {preStatValue.ToStringByStyle(stringStyle, numberSense)} => {postStatValue.ToStringByStyle(stringStyle, numberSense)}");
                     }
                 }
 
                 // Fuel capacity
                 if (upgradeProps.fuelCapacityFactor != 1 && tDef.GetCompProperties<CompProperties_Refuelable>() is CompProperties_Refuelable refuelProps)
-                    reportBuilder.AppendLine($"- {refuelProps.FuelGizmoLabel}: {refuelProps.fuelCapacity} => {Mathf.Round(refuelProps.fuelCapacity * upgradeProps.fuelCapacityFactor)}");
+                    reportBuilder.AppendLine(
+                        $"- {refuelProps.FuelGizmoLabel}: {refuelProps.fuelCapacity} => {Mathf.Round(refuelProps.fuelCapacity * upgradeProps.fuelCapacityFactor)}");
 
                 // Power consumption
                 if (upgradeProps.basePowerConsumptionFactor != 1 && tDef.GetCompProperties<CompProperties_Power>() is CompProperties_Power powerProps)
                     reportBuilder.AppendLine($"- {"PowerConsumption".Translate()}: {powerProps.basePowerConsumption.ToString("F0")} =>" +
-                        $" {Mathf.Round(powerProps.basePowerConsumption * upgradeProps.basePowerConsumptionFactor)}");
+                                             $" {Mathf.Round(powerProps.basePowerConsumption * upgradeProps.basePowerConsumptionFactor)}");
 
                 // Warmup
                 if (upgradeProps.turretBurstWarmupTimeFactor != 1)
-                    reportBuilder.AppendLine($"- {"WarmupTime".Translate()}: {upgradeProps.turretBurstWarmupTimeFactor.ToStringByStyle(ToStringStyle.PercentZero, ToStringNumberSense.Factor)}");
+                    reportBuilder.AppendLine(
+                        $"- {"WarmupTime".Translate()}: {upgradeProps.turretBurstWarmupTimeFactor.ToStringByStyle(ToStringStyle.PercentZero, ToStringNumberSense.Factor)}");
 
                 // Cooldown
                 if (upgradeProps.turretBurstCooldownTimeFactor != 1)
-                    reportBuilder.AppendLine($"- {"StatsReport_Cooldown".Translate()}: {upgradeProps.turretBurstCooldownTimeFactor.ToStringByStyle(ToStringStyle.PercentZero, ToStringNumberSense.Factor)}");
+                    reportBuilder.AppendLine(
+                        $"- {"StatsReport_Cooldown".Translate()}: {upgradeProps.turretBurstCooldownTimeFactor.ToStringByStyle(ToStringStyle.PercentZero, ToStringNumberSense.Factor)}");
 
                 // Firing arc
                 if (upgradeProps.FiringArc != extensionValues.FiringArc)
-                    reportBuilder.AppendLine($"- {"TurretExtensions.FiringArc".Translate()}: {extensionValues.FiringArc.ToStringDegrees()} => {upgradeProps.FiringArc.ToStringDegrees()}");
+                    reportBuilder.AppendLine(
+                        $"- {"TurretExtensions.FiringArc".Translate()}: {extensionValues.FiringArc.ToStringDegrees()} => {upgradeProps.FiringArc.ToStringDegrees()}");
 
                 // User accuracy modifier
                 if ((extensionValues.manningPawnShootingAccuracyOffset != 0 || upgradeProps.manningPawnShootingAccuracyOffset != 0) && tDef.HasComp(typeof(CompMannable)))
                     reportBuilder.AppendLine($"- {"TurretExtensions.UserShootingAccuracyModifier".Translate()}: " +
-                        $"{extensionValues.manningPawnShootingAccuracyOffset.ToStringByStyle(ToStringStyle.FloatOne, ToStringNumberSense.Offset)} => " +
-                        $"{(upgradeProps.manningPawnShootingAccuracyOffset).ToStringByStyle(ToStringStyle.FloatOne, ToStringNumberSense.Offset)}");
+                                             $"{extensionValues.manningPawnShootingAccuracyOffset.ToStringByStyle(ToStringStyle.FloatOne, ToStringNumberSense.Offset)} => " +
+                                             $"{upgradeProps.manningPawnShootingAccuracyOffset.ToStringByStyle(ToStringStyle.FloatOne, ToStringNumberSense.Offset)}");
 
                 // Manually controllable
                 if (extensionValues.canForceAttack != upgradeProps.canForceAttack && !tDef.HasComp(typeof(CompMannable)))
-                {
-                    if (upgradeProps.canForceAttack.Value)
-                        reportBuilder.AppendLine($"- {"TurretExtensions.TurretManuallyControllable".Translate()}");
-                    else
-                        reportBuilder.AppendLine($"- {"TurretExtensions.TurretNotManuallyControllable".Translate()}");
-                }
+                    reportBuilder.AppendLine(upgradeProps.canForceAttack.Value
+                        ? $"- {"TurretExtensions.TurretManuallyControllable".Translate()}"
+                        : $"- {"TurretExtensions.TurretNotManuallyControllable".Translate()}");
             }
 
             // Not upgradable :(
@@ -262,6 +254,5 @@ namespace TurretExtensions
             // Return report text
             return reportBuilder.ToString();
         }
-
     }
 }

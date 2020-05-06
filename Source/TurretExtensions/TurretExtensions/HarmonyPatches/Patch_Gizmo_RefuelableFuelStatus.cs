@@ -1,32 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using RimWorld;
-using Verse;
 using HarmonyLib;
-using UnityEngine;
+using RimWorld;
 
 namespace TurretExtensions
 {
-
     public static class Patch_Gizmo_RefuelableFuelStatus
     {
-
         public static class manual_GizmoOnGUI_Delegate
         {
-
             public static Type delegateType;
 
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase method, ILGenerator ilGen)
             {
-                #if DEBUG
+#if DEBUG
                     Log.Message("Transpiler start: Gizmo_RefuelableFuelStatus.manual_GizmoOnGUI_Delegate (1 match)");
-                #endif
+#endif
 
                 var instructionList = instructions.ToList();
 
@@ -39,35 +31,41 @@ namespace TurretExtensions
 
                 var adjustedFuelCapacityInfo = AccessTools.Method(typeof(manual_GizmoOnGUI_Delegate), nameof(AdjustedFuelCapacity));
 
-                for (int i = 0; i < instructionList.Count; i++)
+                foreach (var ci in instructionList)
                 {
-                    var instruction = instructionList[i];
+                    var instruction = ci;
 
                     // Adjust all calls to fuel capacity to factor in upgraded status
                     if (instruction.OperandIs(fuelCapacityInfo))
                     {
-                        #if DEBUG
+#if DEBUG
                             Log.Message("Gizmo_RefuelableFuelStatus.manual_GizmoOnGUI_Delegate match 1 of 1");
-                        #endif
+#endif
 
-                        bool addr = false;
+                        var addr = false;
                         if (instruction.opcode == OpCodes.Ldflda)
                         {
                             instruction.opcode = OpCodes.Ldfld;
                             addr = true;
                         }
+
                         yield return instruction; // this.$this.refuelable.Props.fuelCapacity
                         yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                         yield return new CodeInstruction(OpCodes.Ldfld, thisInfo); // this.$this
-                        var callAdjustedFuelCapacity = new CodeInstruction(OpCodes.Call, adjustedFuelCapacityInfo); // AdjustedFuelCapacity(this.$this.refuelable.Props.fuelCapacity, this.$this)
+
+                        var callAdjustedFuelCapacity =
+                            new CodeInstruction(OpCodes.Call, adjustedFuelCapacityInfo); // AdjustedFuelCapacity(this.$this.refuelable.Props.fuelCapacity, this.$this)
                         if (addr)
                         {
                             yield return callAdjustedFuelCapacity;
                             yield return new CodeInstruction(OpCodes.Stloc_S, fuelCapacityLocal.LocalIndex);
+
                             instruction = new CodeInstruction(OpCodes.Ldloca_S, fuelCapacityLocal.LocalIndex);
                         }
                         else
+                        {
                             instruction = callAdjustedFuelCapacity;
+                        }
                     }
 
                     yield return instruction;
@@ -78,9 +76,6 @@ namespace TurretExtensions
             {
                 return TurretExtensionsUtility.AdjustedFuelCapacity(original, instance.refuelable.parent);
             }
-
         }
-
     }
-
 }

@@ -1,27 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
     [StaticConstructorOnStartup]
     public static class HarmonyPatches
     {
-
         static HarmonyPatches()
         {
-            #if DEBUG
+#if DEBUG
                 Harmony.DEBUG = true;
-            #endif
+#endif
 
             TurretExtensions.harmonyInstance.PatchAll();
 
@@ -38,11 +30,9 @@ namespace TurretExtensions
                 transpiler: new HarmonyMethod(typeof(Patch_ThingDef.manual_SpecialDisplayStats), "Transpiler"));
 
             // Fully refuel devmode gizmo
-            TurretExtensions.harmonyInstance.Patch(typeof(CompRefuelable).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).Last(m => m.Name.Contains("CompGetGizmosExtra")),
+            TurretExtensions.harmonyInstance.Patch(
+                typeof(CompRefuelable).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).Last(m => m.Name.Contains("CompGetGizmosExtra")),
                 transpiler: new HarmonyMethod(typeof(Patch_CompRefuelable), nameof(Patch_CompRefuelable.FuelCapacityTranspiler)));
         }
-
-
     }
-
 }

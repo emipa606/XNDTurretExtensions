@@ -14,31 +14,36 @@
         </requiredCapacities>
         <prioritizeSustains>true</prioritizeSustains>
     </WorkGiverDef>
-
+    
     <WorkGiverDef Name="ConstructDeliverResourcesToTurrets">
         <defName>ConstructDeliverResourcesToTurrets</defName>
         <label>deliver resources to turrets</label>
         <giverClass>TurretExtensions.WorkGiver_ConstructDeliverResourcesToTurrets</giverClass>
         <workType>Construction</workType>
+        <priorityInType>60</priorityInType>
         <verb>work on</verb>
         <gerund>working on</gerund>
-        <priorityInType>51</priorityInType>
         <requiredCapacities>
             <li>Manipulation</li>
         </requiredCapacities>
         <nonColonistsCanDo>true</nonColonistsCanDo>
         <prioritizeSustains>true</prioritizeSustains>
         <equivalenceGroup>AssistInConstruction</equivalenceGroup>
-
     </WorkGiverDef>
-
+    
     <WorkGiverDef ParentName="ConstructDeliverResourcesToTurrets">
         <defName>DeliverResourcesToTurrets</defName>
         <label>deliver resources to turrets</label>
+        <giverClass>TurretExtensions.WorkGiver_ConstructDeliverResourcesToTurrets</giverClass>
         <workType>Hauling</workType>
+        <priorityInType>9</priorityInType>
         <verb>deliver to</verb>
         <gerund>delivering to</gerund>
-        <priorityInType>8</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+        <nonColonistsCanDo>true</nonColonistsCanDo>
+        <prioritizeSustains>true</prioritizeSustains>
+        <equivalenceGroup>AssistInConstruction</equivalenceGroup>
     </WorkGiverDef>
-
 </Defs>

@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using RimWorld;
 
 namespace TurretExtensions
 {
     public class WorkGiver_UpgradeTurret : WorkGiver_Scanner
     {
-
         public override PathEndMode PathEndMode => PathEndMode.Touch;
 
         public override Danger MaxPathDanger(Pawn pawn)
@@ -22,11 +19,7 @@ namespace TurretExtensions
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
             var upgradeDesignations = pawn.Map.designationManager.SpawnedDesignationsOfDef(DesignationDefOf.UpgradeTurret).ToList();
-            for (int i = 0; i < upgradeDesignations.Count; i++)
-            {
-                var des = upgradeDesignations[i];
-                yield return des.target.Thing;
-            }
+            foreach (var des in upgradeDesignations) yield return des.target.Thing;
         }
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
@@ -36,12 +29,11 @@ namespace TurretExtensions
                 return false;
 
             // Building isn't a turret
-            var turret = t as Building_Turret;
-            if (turret == null)
+            if (!(t is Building_Turret turret))
                 return false;
 
             // Not upgradable
-            var upgradableComp = turret?.TryGetComp<CompUpgradable>();
+            var upgradableComp = turret.TryGetComp<CompUpgradable>();
             if (upgradableComp == null)
                 return false;
 
@@ -54,7 +46,8 @@ namespace TurretExtensions
                 return false;
 
             // Not forced and there's a risk of destroying the turret
-            if (!forced && pawn.GetStatValue(StatDefOf.ConstructSuccessChance) * upgradableComp.Props.upgradeSuccessChanceFactor < 1 && turret.HitPoints <= Mathf.Floor(turret.MaxHitPoints * (1 - upgradableComp.Props.upgradeFailMajorDmgPctRange.TrueMax)))
+            if (!forced && pawn.GetStatValue(StatDefOf.ConstructSuccessChance) * upgradableComp.Props.upgradeSuccessChanceFactor < 1 &&
+                turret.HitPoints <= Mathf.Floor(turret.MaxHitPoints * (1 - upgradableComp.Props.upgradeFailMajorDmgPctRange.TrueMax)))
                 return false;
 
             // Havent finished research requirements
@@ -73,6 +66,5 @@ namespace TurretExtensions
         {
             return new Job(JobDefOf.UpgradeTurret, t);
         }
-
     }
 }
