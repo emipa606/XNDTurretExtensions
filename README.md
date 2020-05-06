@@ -18,5 +18,4 @@ If you want to help testing, please download this repo (Clone or Download -> Dow
 - Error on Selecting a Turret, see also [#1](/../../issues/1)
 
 # LICENSE
-I'm still waiting for a response to confirm I can release this under the MPL2.0 license.
-Until otherwise stated please consider this repo as being under a proprietary license with a usage license only.
+This fork is licensed under MPL2.0, the original project (not this one) is licensed under MIT.
