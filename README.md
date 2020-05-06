@@ -14,6 +14,9 @@ This solution was made in part possible thanks to Dninemfive's help!
 This fork still needs some testing before I am confident enough to make a PR to XeoNova to include it in an official update.
 If you want to help testing, please download this repo (Clone or Download -> Download as Zip, unpack that file into your local mods folder) and report issues you might come across.
 
+# Known Issues
+- Error on Selecting a Turret, see also [#1](/../../issues/1)
+
 # LICENSE
 I'm still waiting for a response to confirm I can release this under the MPL2.0 license.
 Until otherwise stated please consider this repo as being under a proprietary license with a usage license only.
