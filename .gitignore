@@ -452,5 +452,5 @@ $RECYCLE.BIN/
 
 *.xcf
 *.code-workscape
-.idea/*
-.vs/*
+.idea
+.vs
