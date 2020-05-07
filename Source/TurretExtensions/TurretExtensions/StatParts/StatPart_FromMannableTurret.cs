@@ -1,4 +1,8 @@
-﻿using RimWorld;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using RimWorld;
 using Verse;
 
 namespace TurretExtensions
@@ -7,20 +11,25 @@ namespace TurretExtensions
     {
         public override void TransformValue(StatRequest req, ref float val)
         {
-            if (!ShouldApply(req, out var turret)) return;
-            
-            var extensionValues = TurretFrameworkExtension.Get(turret.def);
-            val += turret.IsUpgraded(out var upgradableComp) ? upgradableComp.Props.manningPawnShootingAccuracyOffset : extensionValues.manningPawnShootingAccuracyOffset;
+            if (ShouldApply(req, out var turret))
+            {
+                var extensionValues = TurretFrameworkExtension.Get(turret.def);
+                val += turret.IsUpgraded(out var upgradableComp) ? upgradableComp.Props.manningPawnShootingAccuracyOffset : extensionValues.manningPawnShootingAccuracyOffset;
+            }
         }
 
         public override string ExplanationPart(StatRequest req)
         {
-            if (!ShouldApply(req, out var turret)) return null;
-            
-            var extensionValues = TurretFrameworkExtension.Get(req.Def);
-            var offset = turret.IsUpgraded(out var upgradableComp) ? upgradableComp.Props.manningPawnShootingAccuracyOffset : extensionValues.manningPawnShootingAccuracyOffset;
+            if (ShouldApply(req, out var turret))
+            {
+                var extensionValues = TurretFrameworkExtension.Get(req.Def);
+                var offset = turret.IsUpgraded(out var upgradableComp) ? upgradableComp.Props.manningPawnShootingAccuracyOffset : extensionValues.manningPawnShootingAccuracyOffset;
 
-            return offset != 0 ? $"{turret.def.LabelCap}: {offset.ToStringByStyle(parentStat.ToStringStyleUnfinalized, ToStringNumberSense.Offset)}" : null;
+                if (offset != 0)
+                    return $"{turret.def.LabelCap}: {offset.ToStringByStyle(parentStat.ToStringStyleUnfinalized, ToStringNumberSense.Offset)}";
+            }
+
+            return null;
         }
 
         private bool ShouldApply(StatRequest req, out Building_Turret turret)

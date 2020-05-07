@@ -1,69 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RimWorld;
+using HarmonyLib;
+using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace TurretExtensions
 {
     public class CompUpgradable : ThingComp, IThingHolder, IConstructible
     {
-        private readonly List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
-
-        private Graphic cachedUpgradedGraphic;
-        public List<ThingDefCountClass> finalCostList = new List<ThingDefCountClass>();
-
-        public ThingOwner innerContainer;
-        public bool upgraded;
-        public float upgradeWorkDone;
-        public float upgradeWorkTotal = -1;
-
         public CompProperties_Upgradable Props => (CompProperties_Upgradable) props;
 
         public Graphic UpgradedGraphic
         {
             get
             {
-                if (Props.graphicData != null)
-                {
-                    return cachedUpgradedGraphic ?? (cachedUpgradedGraphic = Props.graphicData.GraphicColoredFor(parent));
-                }
+                if (Props.graphicData != null) return cachedUpgradedGraphic ?? (cachedUpgradedGraphic = Props.graphicData.GraphicColoredFor(parent));
 
                 return null;
             }
-        }
-
-        public bool SufficientMatsToUpgrade => !(from cost in finalCostList let thingCount = innerContainer.TotalStackCountOfDef(cost.thingDef) where thingCount < cost.count select cost).Any();
-
-        public List<ThingDefCountClass> MaterialsNeeded()
-        {
-            cachedMaterialsNeeded.Clear();
-
-            // Determine needed materials
-            foreach (var cost in finalCostList)
-            {
-                var resourceCount = innerContainer.TotalStackCountOfDef(cost.thingDef);
-                var amountNeeded = cost.count - resourceCount;
-                if (amountNeeded > 0)
-                    cachedMaterialsNeeded.Add(new ThingDefCountClass(cost.thingDef, amountNeeded));
-            }
-
-            return cachedMaterialsNeeded;
-        }
-
-        public ThingDef EntityToBuildStuff()
-        {
-            return parent.Stuff;
-        }
-
-        public void GetChildHolders(List<IThingHolder> outChildren)
-        {
-            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, GetDirectlyHeldThings());
-        }
-
-        public ThingOwner GetDirectlyHeldThings()
-        {
-            return innerContainer;
         }
 
         public override void Initialize(CompProperties props)
@@ -155,6 +112,8 @@ namespace TurretExtensions
             return inspectBuilder.ToString().TrimEndNewlines();
         }
 
+        public bool SufficientMatsToUpgrade => !(from cost in finalCostList let thingCount = innerContainer.TotalStackCountOfDef(cost.thingDef) where thingCount < cost.count select cost).Any();
+
         public void Cancel()
         {
             upgradeWorkDone = 0;
@@ -198,6 +157,37 @@ namespace TurretExtensions
             return upgraded ? $"{label} ({"TurretExtensions.TurretUpgradedText".Translate()})" : label;
         }
 
+        public void GetChildHolders(List<IThingHolder> outChildren)
+        {
+            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, GetDirectlyHeldThings());
+        }
+
+        public ThingOwner GetDirectlyHeldThings()
+        {
+            return innerContainer;
+        }
+
+        public List<ThingDefCountClass> MaterialsNeeded()
+        {
+            cachedMaterialsNeeded.Clear();
+
+            // Determine needed materials
+            foreach (var cost in finalCostList)
+            {
+                var resourceCount = innerContainer.TotalStackCountOfDef(cost.thingDef);
+                var amountNeeded = cost.count - resourceCount;
+                if (amountNeeded > 0)
+                    cachedMaterialsNeeded.Add(new ThingDefCountClass(cost.thingDef, amountNeeded));
+            }
+
+            return cachedMaterialsNeeded;
+        }
+
+        public ThingDef EntityToBuildStuff()
+        {
+            return parent.Stuff;
+        }
+
         public override void PostExposeData()
         {
             base.PostExposeData();
@@ -206,5 +196,14 @@ namespace TurretExtensions
             Scribe_Values.Look(ref upgradeWorkDone, "upgradeWorkDone");
             Scribe_Values.Look(ref upgradeWorkTotal, "upgradeWorkTotal", -1);
         }
+
+        public ThingOwner innerContainer;
+        public bool upgraded;
+        public float upgradeWorkDone;
+        public float upgradeWorkTotal = -1;
+
+        private Graphic cachedUpgradedGraphic;
+        public List<ThingDefCountClass> finalCostList = new List<ThingDefCountClass>();
+        private List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
     }
 }

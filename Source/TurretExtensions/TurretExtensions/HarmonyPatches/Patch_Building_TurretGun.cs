@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -16,14 +21,14 @@ namespace TurretExtensions
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilGen)
             {
 #if DEBUG
-                    Log.Message("Transpiler start: Building_TurretGun.DrawExtraSelectionOverlays (1 match)");
+                Log.Message("Transpiler start: Building_TurretGun.DrawExtraSelectionOverlays (1 match)");
 #endif
 
                 var instructionList = instructions.ToList();
 
-                var drawRadiusRingInfo = AccessTools.Method(typeof(GenDraw), nameof(GenDraw.DrawRadiusRing), new[] {typeof(IntVec3), typeof(float)});
+                var drawRadiusRingInfo = AccessTools.Method(typeof(GenDraw), nameof(GenDraw.DrawRadiusRing), new Type[] {typeof(IntVec3), typeof(float)});
                 var tryDrawFiringConeInfo = AccessTools.Method(typeof(TurretExtensionsUtility), nameof(TurretExtensionsUtility.TryDrawFiringCone),
-                    new[] {typeof(Building_Turret), typeof(float)});
+                    new Type[] {typeof(Building_Turret), typeof(float)});
 
                 var radRingCount = instructionList.Count(i => HarmonyPatchesUtility.CallingInstruction(i) && (MethodInfo) i.operand == drawRadiusRingInfo);
                 var radRingsFound = 0;
@@ -48,7 +53,7 @@ namespace TurretExtensions
                             if (HarmonyPatchesUtility.CallingInstruction(xInstructionAhead) && xInstructionAhead.OperandIs(drawRadiusRingInfo))
                             {
 #if DEBUG
-                                    Log.Message("Building_TurretGun.DrawExtraSelectionOverlays match 1 of 1");
+                                Log.Message("Building_TurretGun.DrawExtraSelectionOverlays match 1 of 1");
 #endif
 
                                 yield return instruction; // num < x or num > x
@@ -114,6 +119,7 @@ namespace TurretExtensions
                         NonPublicProperties.TurretTop_set_CurRotation(___top, Rot4.West.AsAngle);
                         break;
                     case TurretGunFaceDirection.Unspecified:
+                        NonPublicProperties.TurretTop_set_CurRotation(___top, __instance.Rotation.AsAngle);
                         break;
                     default:
                         NonPublicProperties.TurretTop_set_CurRotation(___top, __instance.Rotation.AsAngle);
@@ -176,9 +182,8 @@ namespace TurretExtensions
                 var upgradableComp = __instance.TryGetComp<CompUpgradable>();
 
                 // Upgradable comp doesn't exist/isn't upgraded and can force attack, or exists and upgraded and can force attack
-                if (upgradableComp.Props.canForceAttack == null || ((upgradableComp.upgraded || !extensionValues.canForceAttack) &&
-                                                                    (!upgradableComp.upgraded || !upgradableComp.Props.canForceAttack.Value))) return;
-
+                if (upgradableComp.Props.canForceAttack != null && ((upgradableComp.upgraded) || !extensionValues.canForceAttack) && (!upgradableComp.upgraded || !upgradableComp.Props.canForceAttack.Value)) return;
+                    
                 if (!__instance.def.HasComp(typeof(CompMannable)))
                     __result = true;
                 else

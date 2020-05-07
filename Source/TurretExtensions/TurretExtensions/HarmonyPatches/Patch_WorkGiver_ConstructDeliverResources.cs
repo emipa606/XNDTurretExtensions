@@ -1,28 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
     public static class Patch_WorkGiver_ConstructDeliverResources
     {
-        [HarmonyPatch(typeof(ThingListGroupHelper), "Includes")]
-        public static void Postfix(ref ThingRequestGroup ___group, ref ThingDef ___def, ref bool __result)
-        {
-            if (___group != ThingRequestGroup.Undefined || ___def.category != ThingCategory.Building || !___def.building.IsTurret) return;
-            
-            __result = true;
-        }
-    
         #region Shared Transpiler
 
         public static IEnumerable<CodeInstruction> IConstructibleCastCorrecterTranspiler(IEnumerable<CodeInstruction> instructions, OpCode iConstructibleOpcode)
         {
 #if DEBUG
-                Log.Message("Transpiler start: Patch_WorkGiver_ConstructDeliverResources.IConstructibleCastCorrecterTranspiler (1 match)");
+            Log.Message("Transpiler start: Patch_WorkGiver_ConstructDeliverResources.IConstructibleCastCorrecterTranspiler (1 match)");
 #endif
 
             var instructionList = instructions.ToList();
@@ -33,14 +31,14 @@ namespace TurretExtensions
             {
                 var instruction = instructionList[i];
 
-                // Add a call to our helper method before anything that attemps to cast IConstructible
+                // Add a call to our helper method before anything that attempts to cast IConstructible
                 if (instruction.opcode == iConstructibleOpcode)
                 {
                     var nextInstruction = instructionList[i + 1];
                     if (nextInstruction.opcode == OpCodes.Castclass || nextInstruction.opcode == OpCodes.Isinst)
                     {
 #if DEBUG
-                            Log.Message("Patch_WorkGiver_ConstructDeliverResources.IConstructibleCastCorrecterTranspiler match 1 of 1");
+                        Log.Message("Patch_WorkGiver_ConstructDeliverResources.IConstructibleCastCorrecterTranspiler match 1 of 1");
 #endif
 
                         yield return instruction; // c

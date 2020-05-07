@@ -2,7 +2,8 @@ D:\Documents\GitHub\TurretExtensions\1.1\Assemblies\TurretExtensions.dll
 D:\Documents\GitHub\TurretExtensions\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.csprojAssemblyReference.cache
 D:\Documents\GitHub\TurretExtensions\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.dll
 G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\1.1\Assemblies\TurretExtensions.dll
+G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\1.1\Assemblies\TurretExtensions.pdb
 G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.csprojAssemblyReference.cache
 G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.csproj.CoreCompileInputs.cache
-G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.csproj.CopyComplete
 G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.dll
+G:\SteamLibrary\steamapps\common\RimWorld\Mods\TurretExtensions-master\Source\TurretExtensions\TurretExtensions\obj\Debug\TurretExtensions.pdb

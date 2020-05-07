@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -17,7 +21,7 @@ namespace TurretExtensions
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
 #if DEBUG
-                    Log.Message("Transpiler start: JobDriver_ManTurret.FindAmmoForTurret (1 match)");
+                Log.Message("Transpiler start: JobDriver_ManTurret.FindAmmoForTurret (1 match)");
 #endif
 
 
@@ -38,7 +42,7 @@ namespace TurretExtensions
                     if (instruction == originalValidatorStore)
                     {
 #if DEBUG
-                            Log.Message("JobDriver_ManTurret.FindAmmoForTurret match 1 of 1");
+                        Log.Message("JobDriver_ManTurret.FindAmmoForTurret match 1 of 1");
 #endif
 
                         yield return instruction;

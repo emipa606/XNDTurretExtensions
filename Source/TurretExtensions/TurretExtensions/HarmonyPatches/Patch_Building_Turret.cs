@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -26,7 +32,7 @@ namespace TurretExtensions
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
 #if DEBUG
-                    Log.Message("Transpiler start: Building_Turret.PreApplyDamage (1 match)");
+                Log.Message("Transpiler start: Building_Turret.PreApplyDamage (1 match)");
 #endif
 
                 var instructionList = instructions.ToList();
@@ -45,12 +51,12 @@ namespace TurretExtensions
                         if (nextInstruction.opcode == OpCodes.Callvirt && nextInstruction.OperandIs(notifyDamageAppliedInfo))
                         {
 #if DEBUG
-                                Log.Message("Building_Turret.PreApplyDamage match 1 of 1");
+                            Log.Message("Building_Turret.PreApplyDamage match 1 of 1");
 #endif
 
                             yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                             yield return instruction.Clone(); // true
-                            
+
                             instruction = new CodeInstruction(OpCodes.Call, affectedByEMPInfo); // AffectedByEMP(this, true)
                         }
                     }

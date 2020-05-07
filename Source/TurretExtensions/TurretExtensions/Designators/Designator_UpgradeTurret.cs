@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
+using System.Text;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace TurretExtensions
 {
     public class Designator_UpgradeTurret : Designator
     {
-        private readonly List<Building_Turret> designatedTurrets = new List<Building_Turret>();
+        private List<Building_Turret> designatedTurrets = new List<Building_Turret>();
 
         public Designator_UpgradeTurret()
         {
@@ -47,10 +49,13 @@ namespace TurretExtensions
         {
             var upgradableTurrets = UpgradableTurretsInSelection(c).ToList();
             foreach (var turret in upgradableTurrets)
+            {
                 if (DebugSettings.godMode)
                     turret.TryGetComp<CompUpgradable>().upgraded = true;
                 else
                     DesignateThing(turret);
+                ;
+            }
         }
 
         public override void DesignateThing(Thing t)
@@ -61,7 +66,7 @@ namespace TurretExtensions
                 var upgradableComp = t.TryGetComp<CompUpgradable>();
                 upgradableComp.Upgrade();
                 if (upgradableComp.finalCostList == null) return;
-
+                
                 foreach (var thing in upgradableComp.finalCostList)
                 {
                     var initThingCount = upgradableComp.innerContainer.TotalStackCountOfDef(thing.thingDef);
@@ -69,7 +74,6 @@ namespace TurretExtensions
                         upgradableComp.innerContainer.TryAdd(ThingMaker.MakeThing(thing.thingDef));
                 }
             }
-
             else
             {
                 Map.designationManager.AddDesignation(new Designation(t, Designation));
@@ -84,6 +88,7 @@ namespace TurretExtensions
                 {
                     NotifyPlayerOfInsufficientSkill(turret);
                     NotifyPlayerOfInsufficientResearch(turret);
+                    // NotifyPlayerOfInsufficientMaterials(turret);
                 }
 
             designatedTurrets.Clear();
@@ -118,7 +123,19 @@ namespace TurretExtensions
 
             if (researchRequirementsMet) return;
             
-            string messageText = "TurretExtensions.UpgradeResearchNotMetMessage".Translate(t.def.label) + ": " + researchProjectsUnfinished.ToCommaList().CapitalizeFirst();
+            string messageText = "TurretExtensions.UpgradeResearchNotMetMessage".Translate(t.def.label) + ": " +
+                                 GenText.ToCommaList(researchProjectsUnfinished).CapitalizeFirst();
+            Messages.Message(messageText, MessageTypeDefOf.CautionInput, false);
+        }
+
+        private void NotifyPlayerOfInsufficientMaterials(Thing t)
+        {
+            var upgradableComp = t.TryGetComp<CompUpgradable>();
+            if (upgradableComp.finalCostList == null) return;
+            
+            var requiredMaterials = upgradableComp.finalCostList.Select(thing => thing.Label).ToList();
+            var messageText = "Missing required materials: " + GenText.ToCommaList(requiredMaterials).CapitalizeFirst();
+                
             Messages.Message(messageText, MessageTypeDefOf.CautionInput, false);
         }
 

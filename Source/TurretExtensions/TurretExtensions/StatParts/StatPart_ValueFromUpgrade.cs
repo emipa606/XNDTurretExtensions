@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using RimWorld;
 using Verse;
 
@@ -11,27 +14,28 @@ namespace TurretExtensions
             var failPoint = 1;
             try
             {
-                if (!req.HasThing || !(req.Thing.GetInnerIfMinified() is Building_Turret turret) || !turret.IsUpgradable(out var uC)) return;
-                
-                failPoint = 2;
-                if (!uC.finalCostList.NullOrEmpty())
+                if (req.HasThing && req.Thing.GetInnerIfMinified() is Building_Turret turret && turret.IsUpgradable(out var uC))
                 {
-                    failPoint = 3;
-                    foreach (var t in uC.innerContainer)
+                    failPoint = 2;
+                    if (!uC.finalCostList.NullOrEmpty())
                     {
-                        failPoint = 4;
-                        var thing = t;
-                        failPoint = 5;
-                        val += thing.MarketValue * thing.stackCount;
+                        failPoint = 3;
+                        for (var i = 0; i < uC.innerContainer.Count; i++)
+                        {
+                            failPoint = 4;
+                            var thing = uC.innerContainer[i];
+                            failPoint = 5;
+                            val += thing.MarketValue * thing.stackCount;
+                        }
                     }
-                }
 
-                failPoint = 6;
-                val += Math.Min(uC.upgradeWorkDone, uC.upgradeWorkTotal) * StatWorker_MarketValue.ValuePerWork;
+                    failPoint = 6;
+                    val += Math.Min(uC.upgradeWorkDone, uC.upgradeWorkTotal) * StatWorker_MarketValue.ValuePerWork;
+                }
             }
             catch (Exception ex)
             {
-                Log.Message($"Exception in getting value from upgrade (failPoint={failPoint}): {ex}");
+                Log.Message($"Exception in getting value from upgrade (failPoint={failPoint}): {ex.ToString()}");
             }
         }
 

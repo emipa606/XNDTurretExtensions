@@ -1,8 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Reflection;
-using HarmonyLib;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -12,7 +19,7 @@ namespace TurretExtensions
         static HarmonyPatches()
         {
 #if DEBUG
-                Harmony.DEBUG = true;
+            Harmony.DEBUG = true;
 #endif
 
             TurretExtensions.harmonyInstance.PatchAll();

@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -15,7 +21,7 @@ namespace TurretExtensions
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilGen)
             {
 #if DEBUG
-                    Log.Message("Transpiler start: Verb.DrawHighlight (no matches)");
+                Log.Message("Transpiler start: Verb.DrawHighlight (no matches)");
 #endif
 
                 var instructionList = instructions.ToList();

@@ -15,10 +15,10 @@
         <prioritizeSustains>true</prioritizeSustains>
     </WorkGiverDef>
     
-    <WorkGiverDef Name="ConstructDeliverResourcesToTurrets">
-        <defName>ConstructDeliverResourcesToTurrets</defName>
-        <label>deliver resources to turrets</label>
-        <giverClass>TurretExtensions.WorkGiver_ConstructDeliverResourcesToTurrets</giverClass>
+    <WorkGiverDef>
+        <defName>ConstructUpgradedTurrets</defName>
+        <label>construct upgraded turrets</label>
+        <giverClass>TurretExtensions.WorkGiver_ConstructUpgradedTurrets</giverClass>
         <workType>Construction</workType>
         <priorityInType>60</priorityInType>
         <verb>work on</verb>
@@ -31,10 +31,10 @@
         <equivalenceGroup>AssistInConstruction</equivalenceGroup>
     </WorkGiverDef>
     
-    <WorkGiverDef ParentName="ConstructDeliverResourcesToTurrets">
+    <WorkGiverDef>
         <defName>DeliverResourcesToTurrets</defName>
         <label>deliver resources to turrets</label>
-        <giverClass>TurretExtensions.WorkGiver_ConstructDeliverResourcesToTurrets</giverClass>
+        <giverClass>TurretExtensions.WorkGiver_DeliverResourcesToTurrets</giverClass>
         <workType>Hauling</workType>
         <priorityInType>9</priorityInType>
         <verb>deliver to</verb>

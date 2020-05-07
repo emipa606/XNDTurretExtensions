@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\1.1\Assemblies\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,12 +59,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\WorkGiver_ConstructDeliverResourcesToTurret.cs" />
+    <Compile Include="AI\WorkGiver_ConstructUpgradedTurrets.cs" />
+    <Compile Include="AI\WorkGiver_DeliverResourcesToTurret.cs" />
     <Compile Include="Designators\Designator_UpgradeTurret.cs" />
     <Compile Include="Enums\TurretGunFaceDirection.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatchesUtility.cs" />
     <Compile Include="HarmonyPatches\Patch_Building_Turret.cs" />
     <Compile Include="HarmonyPatches\Patch_JobDriver_ManTurret.cs" />
+    <Compile Include="HarmonyPatches\Patch_ThingListGroupHelper.cs" />
     <Compile Include="HarmonyPatches\Patch_VerbProperties.cs" />
     <Compile Include="HarmonyPatches\Patch_Verb_Shoot.cs" />
     <Compile Include="HarmonyPatches\Patch_Verb.cs" />

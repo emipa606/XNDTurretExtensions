@@ -9,10 +9,7 @@ namespace TurretExtensions
     public class JobDriver_UpgradeTurret : JobDriver
     {
         // Upgrade work is stored in the comp
-
         private const TargetIndex TurretInd = TargetIndex.A;
-
-        private CompUpgradable UpgradableComp => TargetThingA.TryGetComp<CompUpgradable>();
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -113,5 +110,7 @@ namespace TurretExtensions
                     t.Destroy();
             });
         }
+
+        private CompUpgradable UpgradableComp => TargetThingA.TryGetComp<CompUpgradable>();
     }
 }

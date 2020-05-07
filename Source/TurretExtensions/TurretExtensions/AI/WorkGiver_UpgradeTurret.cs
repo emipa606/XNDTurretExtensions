@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
+using System.Text;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using RimWorld;
 
 namespace TurretExtensions
 {
@@ -24,6 +26,9 @@ namespace TurretExtensions
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
+#if DEBUG
+            Log.Message($"Received Thing {t.Label}, is Turret: {t is Building_Turret}");
+#endif
             // Different factions
             if (t.Faction != pawn.Faction)
                 return false;
@@ -33,14 +38,14 @@ namespace TurretExtensions
                 return false;
 
             // Not upgradable
-            var upgradableComp = turret.TryGetComp<CompUpgradable>();
+            var upgradableComp = turret?.TryGetComp<CompUpgradable>();
             if (upgradableComp == null)
                 return false;
-
+            
             // Already upgraded
             if (upgradableComp.upgraded)
                 return false;
-
+            
             // Not sufficiently skilled
             if (pawn.skills.GetSkill(SkillDefOf.Construction).Level < upgradableComp.Props.constructionSkillPrerequisite)
                 return false;
@@ -49,8 +54,8 @@ namespace TurretExtensions
             if (!forced && pawn.GetStatValue(StatDefOf.ConstructSuccessChance) * upgradableComp.Props.upgradeSuccessChanceFactor < 1 &&
                 turret.HitPoints <= Mathf.Floor(turret.MaxHitPoints * (1 - upgradableComp.Props.upgradeFailMajorDmgPctRange.TrueMax)))
                 return false;
-
-            // Havent finished research requirements
+            
+            // Haven't finished research requirements
             if (upgradableComp.Props.researchPrerequisites != null && upgradableComp.Props.researchPrerequisites.Any(r => !r.IsFinished))
                 return false;
 
@@ -58,6 +63,7 @@ namespace TurretExtensions
             if (!upgradableComp.SufficientMatsToUpgrade)
                 return false;
 
+            Log.Message("Do we even reach this?");
             // Final condition set - the only set that can return true
             return pawn.CanReserve(turret, 1, -1, null, forced) && !turret.IsBurning();
         }

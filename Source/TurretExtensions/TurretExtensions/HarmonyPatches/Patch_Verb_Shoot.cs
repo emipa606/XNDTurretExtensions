@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -48,7 +54,6 @@ namespace TurretExtensions
 
                             yield return instruction; // this.CasterIsPawn
                             yield return new CodeInstruction(OpCodes.Ldarg_0); // this
-                            
                             instruction = new CodeInstruction(OpCodes.Call, casterIsActuallyPawn); // CasterIsActuallyPawn(this.CasterIsPawn, this)
                         }
 
@@ -61,7 +66,6 @@ namespace TurretExtensions
 
                             yield return instruction; // this.CasterPawn
                             yield return new CodeInstruction(OpCodes.Ldarg_0); // this
-                            
                             instruction = new CodeInstruction(OpCodes.Call, actualCasterPawnInfo); // ActualCasterPawn(this.CasterPawn, this)
                         }
                     }
@@ -81,7 +85,6 @@ namespace TurretExtensions
                 // Factor in CompMannable for exp purposes
                 if (original == null && instance.Caster.TryGetComp<CompMannable>() is CompMannable mannableComp)
                     return mannableComp.ManningPawn;
-                
                 return original;
             }
         }

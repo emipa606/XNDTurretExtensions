@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
+using HarmonyLib;
+using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -37,7 +42,6 @@ namespace TurretExtensions
                         yield return instruction; // this.pawn.Drafted;
                         yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                         yield return new CodeInstruction(OpCodes.Ldfld, instructionList[i - 1].operand); // this.pawn
-                        
                         instruction = new CodeInstruction(OpCodes.Call, canRotateDraftedPawnInfo); // CanRotateDraftedPawn(this.pawn.Drafted, this.pawn)
                     }
 
@@ -47,7 +51,9 @@ namespace TurretExtensions
 
             public static bool CanRotateDraftedPawn(bool drafted, Pawn pawn)
             {
-                return pawn.MannedThing() == null && drafted;
+                if (pawn.MannedThing() != null)
+                    return false;
+                return drafted;
             }
         }
     }

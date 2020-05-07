@@ -1,12 +1,19 @@
-﻿using Verse;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using HarmonyLib;
+using UnityEngine;
+using Verse;
+using RimWorld;
 
 namespace TurretExtensions
 {
     public class CompSmartForcedTarget : ThingComp
     {
-        public bool attackingNonDownedPawn;
-
         public CompProperties_SmartForcedTarget Props => (CompProperties_SmartForcedTarget) props;
+
+        public bool attackingNonDownedPawn;
 
         public override void PostExposeData()
         {
