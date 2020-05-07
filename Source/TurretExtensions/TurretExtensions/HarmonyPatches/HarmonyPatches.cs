@@ -30,7 +30,7 @@ namespace TurretExtensions
             Patch_ThingDef.manual_SpecialDisplayStats.enumeratorType = thingDefEnumeratorType;
             TurretExtensions.harmonyInstance.Patch(thingDefEnumeratorType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).First(m => m.Name == "MoveNext"),
                 transpiler: new HarmonyMethod(typeof(Patch_ThingDef.manual_SpecialDisplayStats), "Transpiler"));
-
+            
             // Fully refuel devmode gizmo
             TurretExtensions.harmonyInstance.Patch(
                 typeof(CompRefuelable).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).Last(m => m.Name.Contains("CompGetGizmosExtra")),

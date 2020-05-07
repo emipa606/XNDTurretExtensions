@@ -177,7 +177,7 @@ namespace TurretExtensions
                 var upgradableComp = __instance.TryGetComp<CompUpgradable>();
 
                 // Upgradable comp doesn't exist/isn't upgraded and can force attack, or exists and upgraded and can force attack
-                if (upgradableComp.Props.canForceAttack != null && (upgradableComp.upgraded || !extensionValues.canForceAttack) &&
+                if (upgradableComp == null || upgradableComp.Props.canForceAttack != null && (upgradableComp.upgraded || !extensionValues.canForceAttack) &&
                     (!upgradableComp.upgraded || !upgradableComp.Props.canForceAttack.Value)) return;
 
                 if (!__instance.def.HasComp(typeof(CompMannable)))

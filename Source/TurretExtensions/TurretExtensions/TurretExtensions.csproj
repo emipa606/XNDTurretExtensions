@@ -38,11 +38,11 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.9, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="0Harmony, Version=2.0.0.10, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\References\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp, Version=1.1.7409.16088, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Assembly-CSharp, Version=1.1.7429.26553, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\References\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -66,7 +66,6 @@
     <Compile Include="HarmonyPatches\HarmonyPatchesUtility.cs" />
     <Compile Include="HarmonyPatches\Patch_Building_Turret.cs" />
     <Compile Include="HarmonyPatches\Patch_JobDriver_ManTurret.cs" />
-    <Compile Include="HarmonyPatches\Patch_ThingListGroupHelper.cs" />
     <Compile Include="HarmonyPatches\Patch_VerbProperties.cs" />
     <Compile Include="HarmonyPatches\Patch_Verb_Shoot.cs" />
     <Compile Include="HarmonyPatches\Patch_Verb.cs" />
