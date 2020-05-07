@@ -20,25 +20,17 @@ namespace TurretExtensions
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            var upgradeDesignations = pawn.Map.designationManager.SpawnedDesignationsOfDef(DesignationDefOf.UpgradeTurret).ToList();
-            foreach (var des in upgradeDesignations) yield return des.target.Thing;
+            return CompUpgradable.comps.Where(x => x.parent.Map == pawn.Map).Select(x => x.parent);
         }
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-#if DEBUG
-            Log.Message($"Received Thing {t.Label}, is Turret: {t is Building_Turret}");
-#endif
             // Different factions
             if (t.Faction != pawn.Faction)
                 return false;
 
-            // Building isn't a turret
-            if (!(t is Building_Turret turret))
-                return false;
-
             // Not upgradable
-            var upgradableComp = turret?.TryGetComp<CompUpgradable>();
+            var upgradableComp = t.TryGetComp<CompUpgradable>();
             if (upgradableComp == null)
                 return false;
 
@@ -52,7 +44,7 @@ namespace TurretExtensions
 
             // Not forced and there's a risk of destroying the turret
             if (!forced && pawn.GetStatValue(StatDefOf.ConstructSuccessChance) * upgradableComp.Props.upgradeSuccessChanceFactor < 1 &&
-                turret.HitPoints <= Mathf.Floor(turret.MaxHitPoints * (1 - upgradableComp.Props.upgradeFailMajorDmgPctRange.TrueMax)))
+                t.HitPoints <= Mathf.Floor(t.MaxHitPoints * (1 - upgradableComp.Props.upgradeFailMajorDmgPctRange.TrueMax)))
                 return false;
 
             // Haven't finished research requirements
@@ -63,9 +55,8 @@ namespace TurretExtensions
             if (!upgradableComp.SufficientMatsToUpgrade)
                 return false;
 
-            Log.Message("Do we even reach this?");
             // Final condition set - the only set that can return true
-            return pawn.CanReserve(turret, 1, -1, null, forced) && !turret.IsBurning();
+            return pawn.CanReserve(t, 1, -1, null, forced) && !t.IsBurning();
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)

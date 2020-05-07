@@ -8,10 +8,11 @@ namespace TurretExtensions
 {
     public class CompUpgradable : ThingComp, IThingHolder, IConstructible
     {
+        public static readonly List<CompUpgradable> comps = new List<CompUpgradable>();
         private readonly List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
 
         private Graphic cachedUpgradedGraphic;
-        public List<ThingDefCountClass> finalCostList = new List<ThingDefCountClass>();
+        public readonly List<ThingDefCountClass> finalCostList = new List<ThingDefCountClass>();
 
         public ThingOwner innerContainer;
         public bool upgraded;
@@ -73,6 +74,10 @@ namespace TurretExtensions
                 ResolveWorkToUpgrade();
 
             innerContainer = new ThingOwner<Thing>(this, false);
+            comps.Add(this);
+#if DEBUG
+            Log.Message($"CompList contains {comps.Count} entries.");
+#endif
         }
 
         private void ResolveCostList()
@@ -111,6 +116,10 @@ namespace TurretExtensions
             base.PostDestroy(mode, previousMap);
 
             // If the turret wasn't minified, drop anything inside the innerContainer
+            comps.Remove(this);
+#if DEBUG
+            Log.Message($"CompList contains {comps.Count} entries.");
+#endif
             if (mode == DestroyMode.Vanish) return;
 
             var resourceDropFraction = mode == DestroyMode.KillFinalize ? Props.destroyedResourceDropPct : Props.baseResourceDropPct;

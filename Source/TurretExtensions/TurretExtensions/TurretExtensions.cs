@@ -1,8 +1,11 @@
-﻿using HarmonyLib;
+﻿using System.Net.Configuration;
+using HarmonyLib;
+using JetBrains.Annotations;
 using Verse;
 
 namespace TurretExtensions
 {
+    [UsedImplicitly]
     public class TurretExtensions : Mod
     {
         public static Harmony harmonyInstance;
@@ -10,7 +13,7 @@ namespace TurretExtensions
         public TurretExtensions(ModContentPack content) : base(content)
         {
 #if DEBUG
-            Log.Error("XeoNovaDan left debugging enabled in Turret Extensions - please let him know!");
+            Log.Warning("[TE] Debugging enabled in Turret Extensions - please let the author know!");
 #endif
 
             harmonyInstance = new Harmony("XeoNovaDan.TurretExtensions");

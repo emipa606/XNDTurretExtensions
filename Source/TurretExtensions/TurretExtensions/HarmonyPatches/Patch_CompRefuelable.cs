@@ -23,9 +23,9 @@ namespace TurretExtensions
 
             var adjustedFuelCapacity = AccessTools.Method(typeof(TurretExtensionsUtility), nameof(TurretExtensionsUtility.AdjustedFuelCapacity));
 
-            for (var i = 0; i < instructionList.Count; i++)
+            foreach (var ci in instructionList)
             {
-                var instruction = instructionList[i];
+                var instruction = ci;
 
                 if (instruction.IsFuelCapacityInstruction())
                 {
@@ -37,6 +37,7 @@ namespace TurretExtensions
                     yield return instruction;
                     yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                     yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(CompRefuelable), nameof(CompRefuelable.parent))); // this.parent
+                    
                     instruction = new CodeInstruction(OpCodes.Call, adjustedFuelCapacity); // TurretExtensionsUtility.AdjustedFuelCapacity(this.parent)
                 }
 

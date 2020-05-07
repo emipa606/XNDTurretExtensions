@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -8,13 +10,13 @@ namespace TurretExtensions
     [UsedImplicitly]
     public class WorkGiver_ConstructUpgradedTurrets : WorkGiver_ConstructDeliverResources
     {
-        public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForGroup(ThingRequestGroup.Blueprint);
+        public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
+        {
+            return CompUpgradable.comps.Where(x => x.parent.Map == pawn.Map).Select(x => x.parent);
+        }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            if (!(t is Building_Turret))
-                return null;
-
             // Different factions
             if (t.Faction != pawn.Faction)
                 return null;
