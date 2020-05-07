@@ -5,17 +5,14 @@ Turret Extensions for RimWorld. A utility for modders to be able to create more 
 This fork's main goal is to optimize Turret Extensions so it no longer requires up to 20ms for each time it runs the WorkGiver (worst case scenarion).
 
 At various places the code has been cleaned up and condensed using, hopefully, faster methods. The biggest saving is done by changing the way the WorkGiver runs.
-We patch RimWorld's ThingListGroupHelper.Includes() function to include Turrets within the ThingRequestGroup.Undefined, and set the WorkGiver to run on those.
-Combined with a check at the beginning of the WorkGiver's function to exit if something isn't a Turret, we reduce the amount of scans required massively (before this patch it ran on all buildings marked as BuildingArtificial).
 
-This solution was made in part possible thanks to Dninemfive's help!
+We now add all turrets that are eligable to be upgraded (as in make use of the CompUpgradable component) to a static list, which we then pass into the WorkGivers. This keeps the amount of cycles to a minimum as we only go through the things we need to. No more scanning everything that is considered a building.
+
+Thanks to Dubwise for this idea, and Syrchalis for a good example implementation.
 
 # Testing Required
 This fork still needs some testing before I am confident enough to make a PR to XeoNova to include it in an official update.
 If you want to help testing, please download this repo (Clone or Download -> Download as Zip, unpack that file into your local mods folder) and report issues you might come across.
-
-# Known Issues
-- Error on Selecting a Turret, see also [#1](/../../issues/1)
 
 # LICENSE
 This fork is licensed under MPL2.0, the original project (not this one) is licensed under MIT. See the image for proof:
