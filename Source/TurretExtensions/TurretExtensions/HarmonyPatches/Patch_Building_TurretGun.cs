@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -26,9 +21,9 @@ namespace TurretExtensions
 
                 var instructionList = instructions.ToList();
 
-                var drawRadiusRingInfo = AccessTools.Method(typeof(GenDraw), nameof(GenDraw.DrawRadiusRing), new Type[] {typeof(IntVec3), typeof(float)});
+                var drawRadiusRingInfo = AccessTools.Method(typeof(GenDraw), nameof(GenDraw.DrawRadiusRing), new[] {typeof(IntVec3), typeof(float)});
                 var tryDrawFiringConeInfo = AccessTools.Method(typeof(TurretExtensionsUtility), nameof(TurretExtensionsUtility.TryDrawFiringCone),
-                    new Type[] {typeof(Building_Turret), typeof(float)});
+                    new[] {typeof(Building_Turret), typeof(float)});
 
                 var radRingCount = instructionList.Count(i => HarmonyPatchesUtility.CallingInstruction(i) && (MethodInfo) i.operand == drawRadiusRingInfo);
                 var radRingsFound = 0;
@@ -60,7 +55,7 @@ namespace TurretExtensions
                                 yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                                 yield return instructionList[i - 2].Clone(); // num
                                 yield return new CodeInstruction(OpCodes.Call, tryDrawFiringConeInfo); // TurretExtensionsUtility.TryDrawFiringCone(this, num)
-                                
+
                                 instruction = new CodeInstruction(OpCodes.Brtrue, instruction.operand);
                                 radRingsFound++;
                                 break;
@@ -83,7 +78,7 @@ namespace TurretExtensions
                 // If the turret has CompSmartForcedTarget and is attacking a pawn that just got downed, automatically make it target something else
                 var smartTargetComp = __instance.TryGetComp<CompSmartForcedTarget>();
                 if (smartTargetComp == null || !(___forcedTarget.Thing is Pawn pawn)) return;
-                
+
                 if (!pawn.Downed && !smartTargetComp.attackingNonDownedPawn && (!smartTargetComp.Props.onlyApplyWhenUpgraded || __instance.IsUpgraded(out var upgradableComp)))
                 {
                     smartTargetComp.attackingNonDownedPawn = true;
@@ -155,7 +150,7 @@ namespace TurretExtensions
             {
                 // Cone of fire check
                 if (!targ.IsValid || targ.Cell.WithinFiringArcOf(__instance)) return true;
-                
+
                 Messages.Message("TurretExtensions.MessageTargetOutsideFiringArc".Translate(), MessageTypeDefOf.RejectInput, false);
                 return false;
             }
@@ -177,13 +172,14 @@ namespace TurretExtensions
             {
                 // If the turret isn't mannable, is player-controlled and is set to be able to force target, do so
                 if (__instance.Faction != Faction.OfPlayer) return;
-                
+
                 var extensionValues = TurretFrameworkExtension.Get(__instance.def);
                 var upgradableComp = __instance.TryGetComp<CompUpgradable>();
 
                 // Upgradable comp doesn't exist/isn't upgraded and can force attack, or exists and upgraded and can force attack
-                if (upgradableComp.Props.canForceAttack != null && ((upgradableComp.upgraded) || !extensionValues.canForceAttack) && (!upgradableComp.upgraded || !upgradableComp.Props.canForceAttack.Value)) return;
-                    
+                if (upgradableComp.Props.canForceAttack != null && (upgradableComp.upgraded || !extensionValues.canForceAttack) &&
+                    (!upgradableComp.upgraded || !upgradableComp.Props.canForceAttack.Value)) return;
+
                 if (!__instance.def.HasComp(typeof(CompMannable)))
                     __result = true;
                 else

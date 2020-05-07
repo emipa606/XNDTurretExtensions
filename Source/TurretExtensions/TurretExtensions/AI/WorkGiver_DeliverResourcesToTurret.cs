@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 using Verse.AI;
-using RimWorld;
 
 namespace TurretExtensions
 {
+    [UsedImplicitly]
     public class WorkGiver_DeliverResourcesToTurrets : WorkGiver_ConstructDeliverResources
     {
         public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForGroup(ThingRequestGroup.Blueprint);
@@ -17,7 +14,7 @@ namespace TurretExtensions
         {
             if (!(t is Building_Turret))
                 return null;
-            
+
             // Different factions
             if (t.Faction != pawn.Faction)
                 return null;

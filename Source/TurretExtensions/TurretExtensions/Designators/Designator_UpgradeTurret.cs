@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using RimWorld;
 using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace TurretExtensions
 {
     public class Designator_UpgradeTurret : Designator
     {
-        private List<Building_Turret> designatedTurrets = new List<Building_Turret>();
+        private readonly List<Building_Turret> designatedTurrets = new List<Building_Turret>();
 
         public Designator_UpgradeTurret()
         {
@@ -35,7 +33,7 @@ namespace TurretExtensions
                 return false;
             if (!UpgradableTurretsInSelection(loc).Any())
                 return "TurretExtensions.MessageMustDesignateUpgradableTurrets".Translate();
-            
+
             return true;
         }
 
@@ -49,13 +47,10 @@ namespace TurretExtensions
         {
             var upgradableTurrets = UpgradableTurretsInSelection(c).ToList();
             foreach (var turret in upgradableTurrets)
-            {
                 if (DebugSettings.godMode)
                     turret.TryGetComp<CompUpgradable>().upgraded = true;
                 else
                     DesignateThing(turret);
-                ;
-            }
         }
 
         public override void DesignateThing(Thing t)
@@ -66,7 +61,7 @@ namespace TurretExtensions
                 var upgradableComp = t.TryGetComp<CompUpgradable>();
                 upgradableComp.Upgrade();
                 if (upgradableComp.finalCostList == null) return;
-                
+
                 foreach (var thing in upgradableComp.finalCostList)
                 {
                     var initThingCount = upgradableComp.innerContainer.TotalStackCountOfDef(thing.thingDef);
@@ -99,7 +94,7 @@ namespace TurretExtensions
             GenUI.RenderMouseoverBracket();
         }
 
-        private void NotifyPlayerOfInsufficientSkill(Thing t)
+        private static void NotifyPlayerOfInsufficientSkill(Thing t)
         {
             var minimumSkill = t.TryGetComp<CompUpgradable>().Props.constructionSkillPrerequisite;
             var freeColonists = Find.CurrentMap.mapPawns.FreeColonists;
@@ -109,7 +104,7 @@ namespace TurretExtensions
                 Messages.Message("TurretExtensions.ConstructionSkillTooLowMessage".Translate(Faction.OfPlayer.def.pawnsPlural, t.def.label), MessageTypeDefOf.CautionInput, false);
         }
 
-        private void NotifyPlayerOfInsufficientResearch(Thing t)
+        private static void NotifyPlayerOfInsufficientResearch(Thing t)
         {
             var researchRequirementsMet = true;
             var researchRequirements = t.TryGetComp<CompUpgradable>().Props.researchPrerequisites;
@@ -122,22 +117,25 @@ namespace TurretExtensions
                 }
 
             if (researchRequirementsMet) return;
-            
+
             string messageText = "TurretExtensions.UpgradeResearchNotMetMessage".Translate(t.def.label) + ": " +
-                                 GenText.ToCommaList(researchProjectsUnfinished).CapitalizeFirst();
+                                 researchProjectsUnfinished.ToCommaList().CapitalizeFirst();
             Messages.Message(messageText, MessageTypeDefOf.CautionInput, false);
         }
 
+        /*
+        // Informs the player of missing materials
         private void NotifyPlayerOfInsufficientMaterials(Thing t)
         {
             var upgradableComp = t.TryGetComp<CompUpgradable>();
             if (upgradableComp.finalCostList == null) return;
-            
+
             var requiredMaterials = upgradableComp.finalCostList.Select(thing => thing.Label).ToList();
-            var messageText = "Missing required materials: " + GenText.ToCommaList(requiredMaterials).CapitalizeFirst();
-                
+            var messageText = "Missing required materials: " + requiredMaterials.ToCommaList().CapitalizeFirst();
+
             Messages.Message(messageText, MessageTypeDefOf.CautionInput, false);
         }
+        */
 
         private IEnumerable<Building_Turret> UpgradableTurretsInSelection(IntVec3 c)
         {

@@ -1,20 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
     public static class Patch_WorkGiver_ConstructDeliverResources
     {
+        [HarmonyPatch(typeof(WorkGiver_ConstructDeliverResources), "FindNearbyNeeders")]
+        public static class FindNearbyNeeders
+        {
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                return IConstructibleCastCorrecterTranspiler(instructions, OpCodes.Ldarg_3);
+            }
+        }
+
+        [HarmonyPatch(typeof(WorkGiver_ConstructDeliverResources), "ResourceDeliverJobFor")]
+        public static class ResourceDeliverJobFor
+        {
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                return IConstructibleCastCorrecterTranspiler(instructions, OpCodes.Ldarg_2);
+            }
+        }
+
         #region Shared Transpiler
 
         public static IEnumerable<CodeInstruction> IConstructibleCastCorrecterTranspiler(IEnumerable<CodeInstruction> instructions, OpCode iConstructibleOpcode)
@@ -42,7 +54,7 @@ namespace TurretExtensions
 #endif
 
                         yield return instruction; // c
-                        
+
                         instruction = new CodeInstruction(OpCodes.Call, iConstructibleThingInfo); // IConstructibleThing(c)
                     }
                 }
@@ -60,23 +72,5 @@ namespace TurretExtensions
         }
 
         #endregion
-
-        [HarmonyPatch(typeof(WorkGiver_ConstructDeliverResources), "FindNearbyNeeders")]
-        public static class FindNearbyNeeders
-        {
-            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                return IConstructibleCastCorrecterTranspiler(instructions, OpCodes.Ldarg_3);
-            }
-        }
-
-        [HarmonyPatch(typeof(WorkGiver_ConstructDeliverResources), "ResourceDeliverJobFor")]
-        public static class ResourceDeliverJobFor
-        {
-            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                return IConstructibleCastCorrecterTranspiler(instructions, OpCodes.Ldarg_2);
-            }
-        }
     }
 }

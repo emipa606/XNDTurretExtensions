@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -51,7 +47,7 @@ namespace TurretExtensions
                         yield return new CodeInstruction(OpCodes.Ldfld, pawnInfo); // pawn
                         yield return new CodeInstruction(OpCodes.Ldarg_1); // gun
                         yield return new CodeInstruction(OpCodes.Call, updatedValidatorInfo); // UpdatedValidator(original, pawn, gun)
-                        
+
                         instruction = instruction.Clone(); // validator = UpdatedValidator(original, pawn, gun)
                     }
 
@@ -68,7 +64,7 @@ namespace TurretExtensions
 
                     // AI - any projectile that fits and causes harm
                     if (!(t.def.projectileWhenLoaded is ThingDef loadedProjDef)) return false;
-                    
+
                     var projDamageDef = loadedProjDef.projectile.damageDef;
                     return original(t) && gun.gun.TryGetComp<CompChangeableProjectile>().GetParentStoreSettings().AllowedToAccept(t) &&
                            ((bool) NonPublicFields.DamageDef_externalViolence.GetValue(projDamageDef) ||

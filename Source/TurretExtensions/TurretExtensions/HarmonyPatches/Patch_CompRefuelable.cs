@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -22,7 +16,7 @@ namespace TurretExtensions
         public static IEnumerable<CodeInstruction> FuelCapacityTranspiler(IEnumerable<CodeInstruction> instructions)
         {
 #if DEBUG
-                Log.Message("Transpiler start: CompRefuelable.FuelCapacityTranspiler (1 match)");
+            Log.Message("Transpiler start: CompRefuelable.FuelCapacityTranspiler (1 match)");
 #endif
 
             var instructionList = instructions.ToList();
@@ -36,7 +30,7 @@ namespace TurretExtensions
                 if (instruction.IsFuelCapacityInstruction())
                 {
 #if DEBUG
-                        Log.Message("Patch_CompRefuelable.FuelCapacityTranspiler match 1 of 1");
+                    Log.Message("Patch_CompRefuelable.FuelCapacityTranspiler match 1 of 1");
 #endif
 
 
@@ -52,7 +46,7 @@ namespace TurretExtensions
 
         #endregion
 
-        [HarmonyPatch(typeof(CompRefuelable), nameof(CompRefuelable.Refuel), new Type[] {typeof(float)})]
+        [HarmonyPatch(typeof(CompRefuelable), nameof(CompRefuelable.Refuel), typeof(float))]
         public static class Refuel
         {
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

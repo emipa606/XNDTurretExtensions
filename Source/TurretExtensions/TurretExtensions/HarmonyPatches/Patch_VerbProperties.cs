@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+﻿using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -21,15 +12,12 @@ namespace TurretExtensions
             public static bool Prefix(VerbProperties __instance, Verb ownerVerb, Pawn attacker, ref float __result)
             {
                 // Vanilla gun turret
-                if (ownerVerb.Caster is Building_TurretGun gunTurret)
-                {
-                    __result = TurretExtensionsUtility.AdjustedTurretBurstWarmupTicks(gunTurret.def.building.turretBurstWarmupTime.SecondsToTicks(), gunTurret).TicksToSeconds() +
-                               NonPublicMethods.Building_TurretGun_BurstCooldownTime(gunTurret) +
-                               ((__instance.burstShotCount - 1) * __instance.ticksBetweenBurstShots).TicksToSeconds();
-                    return false;
-                }
+                if (!(ownerVerb.Caster is Building_TurretGun gunTurret)) return true;
 
-                return true;
+                __result = TurretExtensionsUtility.AdjustedTurretBurstWarmupTicks(gunTurret.def.building.turretBurstWarmupTime.SecondsToTicks(), gunTurret).TicksToSeconds() +
+                           NonPublicMethods.Building_TurretGun_BurstCooldownTime(gunTurret) +
+                           ((__instance.burstShotCount - 1) * __instance.ticksBetweenBurstShots).TicksToSeconds();
+                return false;
             }
         }
     }

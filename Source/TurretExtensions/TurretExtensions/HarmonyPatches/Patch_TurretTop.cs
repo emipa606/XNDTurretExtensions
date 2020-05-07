@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using RimWorld;
-using Verse;
 using HarmonyLib;
+using RimWorld;
 using UnityEngine;
+using Verse;
 
 namespace TurretExtensions
 {
@@ -21,7 +16,7 @@ namespace TurretExtensions
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
 #if DEBUG
-                    Log.Message("Transpiler start: TurretTop.DrawTurret (2 matches)");
+                Log.Message("Transpiler start: TurretTop.DrawTurret (2 matches)");
 #endif
 
                 var instructionList = instructions.ToList();
@@ -31,27 +26,28 @@ namespace TurretExtensions
                 var turretTopOffsetInfo = AccessTools.Field(typeof(BuildingProperties), nameof(BuildingProperties.turretTopOffset));
                 var turretTopDrawSizeInfo = AccessTools.Field(typeof(BuildingProperties), nameof(BuildingProperties.turretTopDrawSize));
 
-                for (var i = 0; i < instructionList.Count; i++)
+                foreach (var ci in instructionList)
                 {
-                    var instruction = instructionList[i];
+                    var instruction = ci;
 
                     if (instruction.opcode == OpCodes.Ldflda && instruction.OperandIs(turretTopOffsetInfo))
                     {
 #if DEBUG
-                            Log.Message("TurretTop.DrawTurret match 1 of 2");
+                        Log.Message("TurretTop.DrawTurret match 1 of 2");
 #endif
 
                         instruction.opcode = OpCodes.Ldfld;
                         yield return instruction;
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
                         yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(TurretTop), "parentTurret"));
+
                         instruction = new CodeInstruction(OpCodes.Call, turretTopOffsetToUse);
                     }
 
                     if (instruction.opcode == OpCodes.Ldfld && instruction.OperandIs(turretTopDrawSizeInfo))
                     {
 #if DEBUG
-                            Log.Message("TurretTop.DrawTurret match 2 of 2");
+                        Log.Message("TurretTop.DrawTurret match 2 of 2");
 #endif
 
                         yield return instruction;
@@ -66,15 +62,14 @@ namespace TurretExtensions
 
             private static Vector2 TurretTopOffsetToUse(Vector2 original, Building_Turret turret)
             {
-                if (turret.IsUpgraded(out var uC) && uC.Props.turretTopOffset != null)
-                    return uC.Props.turretTopOffset;
-                return original;
+                return turret.IsUpgraded(out var uC) ? uC.Props.turretTopOffset : original;
             }
 
             private static float TurretTopDrawSizeToUse(float original, Building_Turret turret)
             {
                 if (turret.IsUpgraded(out var upgradableComp) && upgradableComp.Props.turretTopDrawSize != -1)
                     return upgradableComp.Props.turretTopDrawSize;
+
                 return original;
             }
         }

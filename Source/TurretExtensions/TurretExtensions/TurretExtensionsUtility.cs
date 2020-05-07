@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RimWorld;
 using UnityEngine;
 using Verse;
-using RimWorld;
 
 namespace TurretExtensions
 {
@@ -42,6 +41,7 @@ namespace TurretExtensions
         {
             if (t.IsUpgraded(out var upgradableComp))
                 return baseFuelCapacity * upgradableComp.Props.fuelCapacityFactor;
+
             return baseFuelCapacity;
         }
 
@@ -54,14 +54,11 @@ namespace TurretExtensions
             if (extensionValues.useManningPawnAimingDelayFactor)
             {
                 var mannableComp = turret.TryGetComp<CompMannable>();
-                if (mannableComp != null)
+                var manningPawn = mannableComp?.ManningPawn;
+                if (manningPawn != null)
                 {
-                    var manningPawn = mannableComp.ManningPawn;
-                    if (manningPawn != null)
-                    {
-                        var manningPawnAimingDelayFactor = manningPawn.GetStatValue(StatDefOf.AimingDelayFactor);
-                        warmupTicksFloat *= manningPawnAimingDelayFactor;
-                    }
+                    var manningPawnAimingDelayFactor = manningPawn.GetStatValue(StatDefOf.AimingDelayFactor);
+                    warmupTicksFloat *= manningPawnAimingDelayFactor;
                 }
             }
 
@@ -82,7 +79,7 @@ namespace TurretExtensions
             return WithinFiringArcOf(pos, thing.Position, thing.Rotation, FiringArcFor(thing));
         }
 
-        public static bool WithinFiringArcOf(this IntVec3 pos, IntVec3 pos2, Rot4 rot, float firingArc)
+        private static bool WithinFiringArcOf(this IntVec3 pos, IntVec3 pos2, Rot4 rot, float firingArc)
         {
             return GenGeo.AngleDifferenceBetween(rot.AsAngle, (pos - pos2).AngleFlat) <= firingArc / 2;
         }
@@ -90,11 +87,7 @@ namespace TurretExtensions
         public static float FiringArcFor(Thing thing)
         {
             // Upgraded and defined firing arc
-            if (thing.IsUpgraded(out var upgradableComp))
-                return upgradableComp.Props.FiringArc;
-
-            // Defined firing arc
-            return TurretFrameworkExtension.Get(thing.def).FiringArc;
+            return thing.IsUpgraded(out var upgradableComp) ? upgradableComp.Props.FiringArc : TurretFrameworkExtension.Get(thing.def).FiringArc;
         }
 
         public static bool TryDrawFiringCone(Building_Turret turret, float distance)
@@ -104,34 +97,30 @@ namespace TurretExtensions
 
         public static bool TryDrawFiringCone(IntVec3 centre, Rot4 rot, float distance, float arc)
         {
-            if (arc < 360)
+            if (!(arc < 360)) return false;
+
+            if (distance > GenRadial.MaxRadialPatternRadius)
             {
-                if (distance > GenRadial.MaxRadialPatternRadius)
-                {
-                    if (!(bool) NonPublicFields.GenDraw_maxRadiusMessaged.GetValue(null))
-                    {
-                        Log.Error("Cannot draw radius ring of radius " + distance + ": not enough squares in the precalculated list.", false);
-                        NonPublicFields.GenDraw_maxRadiusMessaged.SetValue(null, true);
-                    }
+                if ((bool) NonPublicFields.GenDraw_maxRadiusMessaged.GetValue(null)) return false;
 
-                    return false;
-                }
+                Log.Error("Cannot draw radius ring of radius " + distance + ": not enough squares in the precalculated list.");
+                NonPublicFields.GenDraw_maxRadiusMessaged.SetValue(null, true);
 
-                var ringDrawCells = (List<IntVec3>) NonPublicFields.GenDraw_ringDrawCells.GetValue(null);
-                ringDrawCells.Clear();
-                var num = GenRadial.NumCellsInRadius(distance);
-                for (var i = 0; i < num; i++)
-                {
-                    var curCell = centre + GenRadial.RadialPattern[i];
-                    if (curCell.WithinFiringArcOf(centre, rot, arc))
-                        ringDrawCells.Add(curCell);
-                }
-
-                GenDraw.DrawFieldEdges(ringDrawCells);
-                return true;
+                return false;
             }
 
-            return false;
+            var ringDrawCells = (List<IntVec3>) NonPublicFields.GenDraw_ringDrawCells.GetValue(null);
+            ringDrawCells.Clear();
+            var num = GenRadial.NumCellsInRadius(distance);
+            for (var i = 0; i < num; i++)
+            {
+                var curCell = centre + GenRadial.RadialPattern[i];
+                if (curCell.WithinFiringArcOf(centre, rot, arc))
+                    ringDrawCells.Add(curCell);
+            }
+
+            GenDraw.DrawFieldEdges(ringDrawCells);
+            return true;
         }
 
         public static string UpgradeReadoutReportText(StatRequest req)
@@ -162,11 +151,7 @@ namespace TurretExtensions
                     reportBuilder.AppendLine($"{"TurretExtensions.TurretResourceRequirements".Translate()}:");
 
                     var usedCostList = upgradeComp != null ? upgradeComp.finalCostList : upgradeProps.costList;
-                    for (var i = 0; i < usedCostList.Count; i++)
-                    {
-                        var curCost = usedCostList[i];
-                        reportBuilder.AppendLine($"- {curCost.count}x {curCost.thingDef.LabelCap}");
-                    }
+                    foreach (var curCost in usedCostList) reportBuilder.AppendLine($"- {curCost.count}x {curCost.thingDef.LabelCap}");
 
                     if (!hasThing && upgradeProps.costStuffCount > 0)
                         reportBuilder.AppendLine($"- {upgradeProps.costStuffCount}x {"StatsReport_Material".Translate()}");
@@ -185,8 +170,8 @@ namespace TurretExtensions
                     reportBuilder.AppendLine();
                     reportBuilder.AppendLine($"{"ResearchPrerequisites".Translate()}:");
 
-                    for (var i = 0; i < upgradeProps.researchPrerequisites.Count; i++)
-                        reportBuilder.AppendLine($"- {upgradeProps.researchPrerequisites[i].LabelCap}");
+                    foreach (var rpd in upgradeProps.researchPrerequisites)
+                        reportBuilder.AppendLine($"- {rpd.LabelCap}");
                 }
 
                 // Upgrade bonuses
@@ -207,9 +192,8 @@ namespace TurretExtensions
                 {
                     statsModified = statsModified.Distinct().ToList();
                     statsModified.SortBy(s => s.LabelCap.RawText);
-                    for (var i = 0; i < statsModified.Count; i++)
+                    foreach (var curStat in statsModified)
                     {
-                        var curStat = statsModified[i];
                         var stringStyle = curStat.toStringStyle;
                         var numberSense = curStat.toStringNumberSense;
                         var preStatValue = hasThing ? req.Thing.GetStatValue(curStat) : tDef.GetStatValueAbstract(curStat, defaultStuff);
@@ -256,12 +240,9 @@ namespace TurretExtensions
 
                 // Manually controllable
                 if (extensionValues.canForceAttack != upgradeProps.canForceAttack && !tDef.HasComp(typeof(CompMannable)))
-                {
-                    if (upgradeProps.canForceAttack.Value)
-                        reportBuilder.AppendLine($"- {"TurretExtensions.TurretManuallyControllable".Translate()}");
-                    else
-                        reportBuilder.AppendLine($"- {"TurretExtensions.TurretNotManuallyControllable".Translate()}");
-                }
+                    reportBuilder.AppendLine(upgradeProps.canForceAttack.Value
+                        ? $"- {"TurretExtensions.TurretManuallyControllable".Translate()}"
+                        : $"- {"TurretExtensions.TurretNotManuallyControllable".Translate()}");
             }
 
             // Not upgradable :(

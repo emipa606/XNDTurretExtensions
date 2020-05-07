@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using Verse;
-using RimWorld;
 
 namespace TurretExtensions
 {
+    [UsedImplicitly]
     public class CompProperties_SmartForcedTarget : CompProperties
     {
+        public bool onlyApplyWhenUpgraded;
+
         public CompProperties_SmartForcedTarget()
         {
             compClass = typeof(CompSmartForcedTarget);
@@ -20,15 +19,11 @@ namespace TurretExtensions
             foreach (var e in base.ConfigErrors(parentDef))
                 yield return e;
 
-            if (onlyApplyWhenUpgraded && !parentDef.HasComp(typeof(CompUpgradable)))
-            {
-                yield return "has onlyApplyWhenUpgraded set to true but doesn't have CompUpgradable";
-                onlyApplyWhenUpgraded = false;
-            }
+            if (!onlyApplyWhenUpgraded || parentDef.HasComp(typeof(CompUpgradable))) yield break;
 
-            yield break;
+            yield return "has onlyApplyWhenUpgraded set to true but doesn't have CompUpgradable";
+
+            onlyApplyWhenUpgraded = false;
         }
-
-        public bool onlyApplyWhenUpgraded = false;
     }
 }

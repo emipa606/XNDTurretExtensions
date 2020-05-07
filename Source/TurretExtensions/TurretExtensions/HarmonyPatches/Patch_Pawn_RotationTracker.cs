@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -21,7 +16,7 @@ namespace TurretExtensions
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
 #if DEBUG
-                    Log.Message("Transpiler start: Pawn_RotationTracker.UpdateRotation (1 match)");
+                Log.Message("Transpiler start: Pawn_RotationTracker.UpdateRotation (1 match)");
 #endif
 
                 var instructionList = instructions.ToList();
@@ -36,12 +31,13 @@ namespace TurretExtensions
                     if (instruction.opcode == OpCodes.Callvirt && (MethodInfo) instruction.operand == draftedGetterInfo)
                     {
 #if DEBUG
-                            Log.Message("Pawn_RotationTracker.UpdateRotation match 1 of 1");
+                        Log.Message("Pawn_RotationTracker.UpdateRotation match 1 of 1");
 #endif
 
                         yield return instruction; // this.pawn.Drafted;
                         yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                         yield return new CodeInstruction(OpCodes.Ldfld, instructionList[i - 1].operand); // this.pawn
+
                         instruction = new CodeInstruction(OpCodes.Call, canRotateDraftedPawnInfo); // CanRotateDraftedPawn(this.pawn.Drafted, this.pawn)
                     }
 
@@ -51,9 +47,7 @@ namespace TurretExtensions
 
             public static bool CanRotateDraftedPawn(bool drafted, Pawn pawn)
             {
-                if (pawn.MannedThing() != null)
-                    return false;
-                return drafted;
+                return pawn.MannedThing() == null && drafted;
             }
         }
     }

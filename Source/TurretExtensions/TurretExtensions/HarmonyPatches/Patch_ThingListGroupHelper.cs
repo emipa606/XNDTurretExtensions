@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using RimWorld;
+﻿using HarmonyLib;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -20,7 +10,7 @@ namespace TurretExtensions
         {
             if (def == null || def.IsBlueprint || __result) return true;
             if (group != ThingRequestGroup.Blueprint || !def.HasComp(typeof(CompUpgradable))) return true;
-            
+
             __result = true;
             return false;
         }

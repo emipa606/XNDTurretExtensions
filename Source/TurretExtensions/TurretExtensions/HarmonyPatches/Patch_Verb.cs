@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using HarmonyLib;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using UnityEngine;
 
 namespace TurretExtensions
 {
@@ -51,7 +45,7 @@ namespace TurretExtensions
             private static bool TryDrawFiringCone(Verb instance)
             {
                 if (!(instance.Caster is Building_Turret turret) || !(TurretExtensionsUtility.FiringArcFor(turret) < 360)) return false;
-                
+
                 TurretExtensionsUtility.TryDrawFiringCone(turret, instance.verbProps.range);
                 return true;
             }

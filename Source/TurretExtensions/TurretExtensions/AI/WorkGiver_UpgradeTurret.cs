@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using JetBrains.Annotations;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using RimWorld;
 
 namespace TurretExtensions
 {
+    [UsedImplicitly]
     public class WorkGiver_UpgradeTurret : WorkGiver_Scanner
     {
         public override PathEndMode PathEndMode => PathEndMode.Touch;
@@ -41,11 +41,11 @@ namespace TurretExtensions
             var upgradableComp = turret?.TryGetComp<CompUpgradable>();
             if (upgradableComp == null)
                 return false;
-            
+
             // Already upgraded
             if (upgradableComp.upgraded)
                 return false;
-            
+
             // Not sufficiently skilled
             if (pawn.skills.GetSkill(SkillDefOf.Construction).Level < upgradableComp.Props.constructionSkillPrerequisite)
                 return false;
@@ -54,7 +54,7 @@ namespace TurretExtensions
             if (!forced && pawn.GetStatValue(StatDefOf.ConstructSuccessChance) * upgradableComp.Props.upgradeSuccessChanceFactor < 1 &&
                 turret.HitPoints <= Mathf.Floor(turret.MaxHitPoints * (1 - upgradableComp.Props.upgradeFailMajorDmgPctRange.TrueMax)))
                 return false;
-            
+
             // Haven't finished research requirements
             if (upgradableComp.Props.researchPrerequisites != null && upgradableComp.Props.researchPrerequisites.Any(r => !r.IsFinished))
                 return false;

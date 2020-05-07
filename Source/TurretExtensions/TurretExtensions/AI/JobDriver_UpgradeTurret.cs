@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -6,10 +7,13 @@ using Verse.AI;
 
 namespace TurretExtensions
 {
+    [UsedImplicitly]
     public class JobDriver_UpgradeTurret : JobDriver
     {
         // Upgrade work is stored in the comp
         private const TargetIndex TurretInd = TargetIndex.A;
+
+        private CompUpgradable UpgradableComp => TargetThingA.TryGetComp<CompUpgradable>();
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -43,7 +47,7 @@ namespace TurretExtensions
 
                 UpgradableComp.upgradeWorkDone += constructionSpeed;
                 if (!(UpgradableComp.upgradeWorkDone >= UpgradableComp.upgradeWorkTotal)) return;
-                
+
                 UpgradableComp.Upgrade();
                 Map.designationManager.TryRemoveDesignationOn(TargetThingA, DesignationDefOf.UpgradeTurret);
                 actor.records.Increment(RecordDefOf.TurretsUpgraded);
@@ -81,11 +85,11 @@ namespace TurretExtensions
             Messages.Message(upgradeFailMessage, new TargetInfo(building.Position, building.Map), MessageTypeDefOf.NegativeEvent);
         }
 
-        private string ResolveResourceLossMessage(float yield)
+        private static string ResolveResourceLossMessage(float yield)
         {
             var resourceLossMessage = "";
             if (!(yield < 1f)) return resourceLossMessage;
-            
+
             resourceLossMessage += " ";
             if (yield >= 0.8f)
                 resourceLossMessage += "TurretExtensions.UpgradeFailResourceLossSmall".Translate();
@@ -110,7 +114,5 @@ namespace TurretExtensions
                     t.Destroy();
             });
         }
-
-        private CompUpgradable UpgradableComp => TargetThingA.TryGetComp<CompUpgradable>();
     }
 }
