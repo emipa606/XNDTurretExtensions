@@ -2,17 +2,18 @@
 using System.Linq;
 using System.Text;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace TurretExtensions
 {
     public class CompUpgradable : ThingComp, IThingHolder, IConstructible
     {
-        private readonly List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
-
         private Graphic cachedUpgradedGraphic;
+        
+        private readonly List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
         public readonly List<ThingDefCountClass> finalCostList = new List<ThingDefCountClass>();
-
+        
         public ThingOwner innerContainer;
         public bool upgraded;
         public float upgradeWorkDone;
@@ -24,13 +25,28 @@ namespace TurretExtensions
             base.PostDeSpawn(map);
             var compMap = map.GetComponent<CompMapTurretExtension>();
             compMap?.comps.Remove(this);
+#if DEBUG
+            Log.Message($"[TE] CompList contains {parent.Map.GetComponent<CompMapTurretExtension>().comps.Count} entries.");
+#endif
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
+            
+            if (innerContainer == null)
+            {
+                innerContainer = new ThingOwner<Thing>(this, false);
+#if DEBUG
+                Log.Warning("[TE] Encountered an invalid Turret inventory (innerContainer), rebuilding inventory.");
+#endif
+            }
+            
             var compMap = parent.Map.GetComponent<CompMapTurretExtension>();
             compMap?.comps.Add(this);
+#if DEBUG
+            Log.Message($"[TE] CompList contains {parent.Map.GetComponent<CompMapTurretExtension>().comps.Count} entries.");
+#endif
         }
 
         public Graphic UpgradedGraphic
@@ -43,8 +59,41 @@ namespace TurretExtensions
             }
         }
 
-        public bool SufficientMatsToUpgrade =>
-            !(from cost in finalCostList let thingCount = innerContainer.TotalStackCountOfDef(cost.thingDef) where thingCount < cost.count select cost).Any();
+#if DEBUG 
+        public bool SufficientMatsToUpgrade
+        {
+            get
+            {
+                foreach (var cost in finalCostList)
+                {
+                    if (cost?.thingDef == null)
+                    {
+                        Log.Error("[TE] ThingDef in CostList returned null.");
+                        return false;
+                    }
+                    
+                    if (innerContainer == null)
+                    {
+                        Log.Error("[TE] Turret inventory (innerContainer) does not exist, how did this happen?");
+                        return false;
+                    }
+
+                    if (innerContainer.Any(x => x == null))
+                    {
+                        Log.Error("[TE] Turret inventory (innerContainer) contains null reference.");
+                        return false;
+                    }
+                    
+                    var thingCount = innerContainer.TotalStackCountOfDef(cost.thingDef);
+                    if (thingCount < cost.count) return false;
+                }
+
+                return true;
+            }
+        }
+#else
+        public bool SufficientMatsToUpgrade => !(from cost in finalCostList let thingCount = innerContainer.TotalStackCountOfDef(cost.thingDef) where thingCount < cost.count select cost).Any();
+#endif
 
         public List<ThingDefCountClass> MaterialsNeeded()
         {
@@ -81,15 +130,11 @@ namespace TurretExtensions
         {
             base.Initialize(props);
 
+            innerContainer = new ThingOwner<Thing>(this, false);
+            
             ResolveCostList();
-
             if (upgradeWorkTotal == -1)
                 ResolveWorkToUpgrade();
-
-            innerContainer = new ThingOwner<Thing>(this, false);
-#if DEBUG
-            Log.Message($"CompList contains {comps.Count} entries.");
-#endif
         }
 
         private void ResolveCostList()
@@ -128,9 +173,6 @@ namespace TurretExtensions
             base.PostDestroy(mode, previousMap);
 
             // If the turret wasn't minified, drop anything inside the innerContainer
-#if DEBUG
-            Log.Message($"CompList contains {comps.Count} entries.");
-#endif
             if (mode == DestroyMode.Vanish) return;
 
             var resourceDropFraction = mode == DestroyMode.KillFinalize ? Props.destroyedResourceDropPct : Props.baseResourceDropPct;
