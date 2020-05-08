@@ -20,7 +20,7 @@ namespace TurretExtensions
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            return CompUpgradable.comps.Where(x => x.parent.Map == pawn.Map).Select(x => x.parent);
+            return pawn.Map.GetComponent<CompMapTurretExtension>().comps.Select(x => x.parent);
         }
 
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)

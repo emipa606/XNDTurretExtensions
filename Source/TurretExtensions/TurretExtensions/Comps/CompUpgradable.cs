@@ -8,7 +8,6 @@ namespace TurretExtensions
 {
     public class CompUpgradable : ThingComp, IThingHolder, IConstructible
     {
-        public static readonly List<CompUpgradable> comps = new List<CompUpgradable>();
         private readonly List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
 
         private Graphic cachedUpgradedGraphic;
@@ -19,6 +18,20 @@ namespace TurretExtensions
         public float upgradeWorkDone;
         public float upgradeWorkTotal = -1;
         public CompProperties_Upgradable Props => (CompProperties_Upgradable) props;
+        
+        public override void PostDeSpawn(Map map)
+        {
+            base.PostDeSpawn(map);
+            var compMap = map.GetComponent<CompMapTurretExtension>();
+            compMap?.comps.Remove(this);
+        }
+
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            base.PostSpawnSetup(respawningAfterLoad);
+            var compMap = parent.Map.GetComponent<CompMapTurretExtension>();
+            compMap?.comps.Add(this);
+        }
 
         public Graphic UpgradedGraphic
         {
@@ -74,7 +87,6 @@ namespace TurretExtensions
                 ResolveWorkToUpgrade();
 
             innerContainer = new ThingOwner<Thing>(this, false);
-            comps.Add(this);
 #if DEBUG
             Log.Message($"CompList contains {comps.Count} entries.");
 #endif
@@ -116,7 +128,6 @@ namespace TurretExtensions
             base.PostDestroy(mode, previousMap);
 
             // If the turret wasn't minified, drop anything inside the innerContainer
-            comps.Remove(this);
 #if DEBUG
             Log.Message($"CompList contains {comps.Count} entries.");
 #endif
