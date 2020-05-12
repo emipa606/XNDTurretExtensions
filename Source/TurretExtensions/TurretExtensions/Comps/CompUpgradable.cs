@@ -129,12 +129,13 @@ namespace TurretExtensions
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-
-            innerContainer = new ThingOwner<Thing>(this, false);
             
             ResolveCostList();
             if (upgradeWorkTotal == -1)
                 ResolveWorkToUpgrade();
+
+            if (innerContainer == null)
+                innerContainer = new ThingOwner<Thing>(this, false);
         }
 
         private void ResolveCostList()
@@ -157,6 +158,12 @@ namespace TurretExtensions
 
         private void ResolveWorkToUpgrade()
         {
+            if (parent == null)
+            {
+                Log.Warning("[TE] ResolveWorkToUpgrade: parent is null, aborting init.");
+                return;
+            }
+            
             var upgradeWorkOffset = Props.upgradeWorkFactorStuff && parent.def.MadeFromStuff
                 ? parent.Stuff.stuffProps.statOffsets.GetStatOffsetFromList(StatDefOf.WorkToBuild)
                 : 0f;
