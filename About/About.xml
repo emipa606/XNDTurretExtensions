@@ -1,25 +1,114 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>[XND] Turret Extensions</name>
-	<author>XeoNovaDan</author>
-	<packageId>XeoNovaDan.TurretExtensions</packageId>
-	<url>https://github.com/RimWorld-CCL-Reborn/TurretExtensions/wiki</url>
-	<supportedVersions>
-		<li>1.0</li>
-		<li>1.1</li>
-	</supportedVersions>
-	<description>Current Version: v1.4.0.0 (6th Mai 2020)\n\nA resource which allows modders to create turret mods with more flair, as well as various bugfixes and quality-of-life improvements.</description>
-	<modDependencies>
-		<li>
-			<packageId>brrainz.harmony</packageId>
-			<displayName>Harmony</displayName>
-			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
-			<steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</steamWorkshopUrl>
-		</li>
-	</modDependencies>
-	<loadAfter>
-		<li>Ludeon.RimWorld</li>
-		<li>Ludeon.RimWorld.Royalty</li>
-		<li>brrainz.harmony</li>
-	</loadAfter>
+  <name>[XND] Turret Extensions (Continued)</name>
+  <packageId>Mlie.XNDTurretExtensions</packageId>
+  <author>XeoNovaDan, Netrve</author>
+  <url>https://github.com/emipa606/XNDTurretExtensions</url>
+  <supportedVersions>
+    <li>1.0</li>
+    <li>1.1</li>
+    <li>1.2</li>
+    <li>1.3</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+  <description>[img]https://i.imgur.com/buuPQel.png[/img]
+Update of XeoNovaDans mod
+https://steamcommunity.com/sharedfiles/filedetails/?id=1496122245
+based on Netrve updated version
+https://steamcommunity.com/sharedfiles/filedetails/?id=2201064941
+
+[img]https://i.imgur.com/pufA0kM.png[/img]
+
+[table]
+    [tr]
+        [td][url=https://invite.gg/Mlie][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
+        [td][url=https://github.com/emipa606/XNDTurretExtensions][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+    [/tr]
+    [tr]
+        [td][img]https://i.imgur.com/WjDSfUn.png[/img][/td]
+        [td][img]https://i.imgur.com/h5VwTNL.png[/img][/td]
+    [/tr]
+[/table]
+	
+[img]https://i.imgur.com/Z4GOv8H.png[/img]
+[h1][b]RimWorld Version 1.2[/b][/h1]
+The 1.2 version of Turret Extensions, [b]Turret Extensions - Continuum[/b], is now being maintained by Netrve, please find the workshop page here - 
+
+https://steamcommunity.com/sharedfiles/filedetails/?id=2201064941
+
+Netrve's fork also has an optimised 1.1 version of this mod which doesn't suffer from the performance issues this release suffers from, and is even compatible with 1.0
+
+[hr]
+
+[h1][b]Translations[/b][/h1]
+Deutsch - Energistics
+
+[h1][b]Overview[/b][/h1]
+Turret Extensions is a multi-purpose mod that does the following:
+[list]
+[*]Fixes several vanilla bugs such as inaccurate cooldown/warmup stat readouts, pawns always facing south when manning turrets, and siegers potentially using wrong shell types
+[*]Makes manned turrets use the Shooting Accuracy and Aiming Time stats of the pawn using them
+[*]Allows you to view the damage amount and damage type of turret ammuniton (e.g. shells)
+[*]Adds various, well-documented turret framework extensions that allow modders to easily do what was previously impossible without C#, purely via XML
+[/list]
+
+Turret Extensions' various framework extensions allows for turret mods that fill niches that could simply never be filled before without the extra capabilities that Turret Extensions brings to the table. Here's some of what Turret Extensions allows for as of v1.3.0:
+[list]
+[*]Manned turrets that actually factor in their operator's accuracy and/or aiming time stats
+[*]Automatic turrets that can be force-targeted by the player, just like with pawns
+[*]Turret force-targeting to auto-cancel when the target is downed, just like with pawns
+[*]Turrets with limited firing arcs, as opposed to always being 360 degrees
+[*]Upgradable turrets with a large variety of parameters that can be adjusted
+[/list]
+
+An example of a mod that uses a significant chunk of this mod's framework is TE Turret Expansion, which you can find in the Links section.
+
+All of the above can now be done [i]purely[/i] in XML; not a single line of C# is required! There is comprehensive documentation in the Links section for how to use this framework in your mods.
+
+If you want to spice up your mod's thumbnail a bit, you can download a 'Powered by Turret Extensions' overlay image from Dropbox [url=https://www.dropbox.com/s/s57fw90729uf0iz/TurretExtensionsPreviewOverlays.zip?dl=0][b]here[/b][/url] - with and without drop shadows.
+Preview:
+
+[img]https://i.imgur.com/aG1rVWZ.png[/img]
+
+If you have any suggestions or other constructive feedback, feel free to let me know!
+
+[h1][b]Compatibility[/b][/h1]
+[b]Mods:[/b]
+Turret Extensions naturally won't be compatible with Combat Extended. Mods that aren't patched with Turret Extensions will mostly behave as they would in vanilla.
+
+[b]Saves:[/b]
+Should be safely addable to existing savegames. There shouldn't be any problems removing this from existing savegames if you're not running any mods that depend on this.
+
+[h1][b]Links[/b][/h1]
+GitHub releases: https://github.com/RimWorld-CCL-Reborn/TurretExtensions/releases
+Documentation for modders: https://github.com/RimWorld-CCL-Reborn/TurretExtensions/wiki
+Source code: https://github.com/RimWorld-CCL-Reborn/TurretExtensions
+
+TE Turret Expansion: https://steamcommunity.com/sharedfiles/filedetails/?id=1496140597
+
+[h1][b]Credits[/b][/h1]
+Big thanks to [b]Mehni, erdelf, Lanilor, ChJees, Spdskatr, Telefonmast and FuriouslyEloquent[/b] for helping me with the C#!
+[b]Pardeike (AKA Brrainz) -[/b] for making the Harmony Patch Library - this probably wouldn't have been possible without his work
+[b]Diana Winters -[/b] for proofreading the documentation
+[b]Marnador -[/b] for the RimWorld-style font
+
+[img]https://i.imgur.com/PwoNOj4.png[/img]
+[list]
+[*] See if the the error persists if you just have this mod and its requirements active.
+[*] If not, try adding your other mods until it happens again.
+[*] Post your error-log using [url=https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] and command Ctrl+F12
+[*] For best support, please use the Discord-channel for error-reporting.
+[*] Do not report errors by making a discussion-thread, I get no notification of that.
+[*] If you have the solution for a problem, please post it to the GitHub repository.
+[/list]</description>
 </ModMetaData>
