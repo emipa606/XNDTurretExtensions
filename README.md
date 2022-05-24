@@ -12,19 +12,6 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=2201064941
 	
 ![Image](https://i.imgur.com/Z4GOv8H.png)
 
-# **RimWorld Version 1.2**
-
-The 1.2 version of Turret Extensions, **Turret Extensions - Continuum**, is now being maintained by Netrve, please find the workshop page here - 
-
-https://steamcommunity.com/sharedfiles/filedetails/?id=2201064941
-
-Netrve's fork also has an optimised 1.1 version of this mod which doesn't suffer from the performance issues this release suffers from, and is even compatible with 1.0
-
-[hr]
-
-# **Translations**
-
-Deutsch - Energistics
 
 # **Overview**
 
@@ -71,11 +58,12 @@ Should be safely addable to existing savegames. There shouldn't be any problems 
 
 # **Links**
 
-GitHub releases: https://github.com/RimWorld-CCL-Reborn/TurretExtensions/releases
 Documentation for modders: https://github.com/RimWorld-CCL-Reborn/TurretExtensions/wiki
-Source code: https://github.com/RimWorld-CCL-Reborn/TurretExtensions
+TE Turret Expansion: https://steamcommunity.com/sharedfiles/filedetails/?id=2810488349
 
-TE Turret Expansion: https://steamcommunity.com/sharedfiles/filedetails/?id=1496140597
+# **Translations**
+
+Deutsch - Energistics
 
 # **Credits**
 
@@ -83,6 +71,14 @@ Big thanks to **Mehni, erdelf, Lanilor, ChJees, Spdskatr, Telefonmast and Furiou
 **Pardeike (AKA Brrainz) -** for making the Harmony Patch Library - this probably wouldn't have been possible without his work
 **Diana Winters -** for proofreading the documentation
 **Marnador -** for the RimWorld-style font
+
+[hr]
+## Netrves additional description
+
+Note: I recently started a new job and I'm still adjusting. Updates and responses could be delayed.
+
+Turret Extensions - Continuum is the official continuation of Turret Extensions by XeoNovaDan. (Proof: https://i.imgur.com/CyqSjAG.png)
+With XeoNovaDan retiring and moving on, I have decided to take on maintaining this and maybe some other of his mods for the foreseeable future. It features performance improvements and other updates, with additional features planned too.
 
 ![Image](https://i.imgur.com/PwoNOj4.png)
 

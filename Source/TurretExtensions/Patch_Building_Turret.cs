@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -22,38 +19,38 @@ public static class Patch_Building_Turret
         }
     }
 
-    [HarmonyPatch(typeof(Building_Turret), "PreApplyDamage")]
-    public static class PreApplyDamage
-    {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            var instructionList = instructions.ToList();
-            checked
-            {
-                for (var i = 0; i < instructionList.Count; i++)
-                {
-                    var instruction = instructionList[i];
-                    var value = AccessTools.Method(typeof(StunHandler), "Notify_DamageApplied");
-                    var affectedByEMPInfo = AccessTools.Method(typeof(PreApplyDamage), "AffectedByEMP");
-                    if (instruction.opcode == OpCodes.Ldc_I4_1)
-                    {
-                        var codeInstruction = instructionList[i + 1];
-                        if (codeInstruction.opcode == OpCodes.Callvirt && codeInstruction.OperandIs(value))
-                        {
-                            yield return new CodeInstruction(OpCodes.Ldarg_0);
-                            yield return instruction.Clone();
-                            instruction = new CodeInstruction(OpCodes.Call, affectedByEMPInfo);
-                        }
-                    }
+    //[HarmonyPatch(typeof(Building_Turret), "PreApplyDamage")]
+    //public static class PreApplyDamage
+    //{
+    //    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    //    {
+    //        var instructionList = instructions.ToList();
+    //        checked
+    //        {
+    //            for (var i = 0; i < instructionList.Count; i++)
+    //            {
+    //                var instruction = instructionList[i];
+    //                var value = AccessTools.Method(typeof(StunHandler), "Notify_DamageApplied");
+    //                var affectedByEMPInfo = AccessTools.Method(typeof(PreApplyDamage), "AffectedByEMP");
+    //                if (instruction.opcode == OpCodes.Ldc_I4_1)
+    //                {
+    //                    var codeInstruction = instructionList[i + 1];
+    //                    if (codeInstruction.opcode == OpCodes.Callvirt && codeInstruction.OperandIs(value))
+    //                    {
+    //                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+    //                        yield return instruction.Clone();
+    //                        instruction = new CodeInstruction(OpCodes.Call, affectedByEMPInfo);
+    //                    }
+    //                }
 
-                    yield return instruction;
-                }
-            }
-        }
+    //                yield return instruction;
+    //            }
+    //        }
+    //    }
 
-        private static bool AffectedByEMP(Building_Turret instance, bool dummyParam)
-        {
-            return instance.AffectedByEMP();
-        }
-    }
+    //    private static bool AffectedByEMP(Building_Turret instance, bool dummyParam)
+    //    {
+    //        return instance.AffectedByEMP();
+    //    }
+    //}
 }
