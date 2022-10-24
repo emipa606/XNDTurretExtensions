@@ -33,7 +33,7 @@ public static class Patch_Verb
 
         private static bool TryDrawFiringCone(Verb instance)
         {
-            if (!(instance.Caster is Building_Turret building_Turret) ||
+            if (instance.Caster is not Building_Turret building_Turret ||
                 !(TurretExtensionsUtility.FiringArcFor(building_Turret) < 360f))
             {
                 return false;

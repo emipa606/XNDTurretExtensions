@@ -188,7 +188,7 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
 
     public override string CompInspectStringExtra()
     {
-        if (!(ParentHolder is Map))
+        if (ParentHolder is not Map)
         {
             return base.CompInspectStringExtra();
         }
@@ -250,12 +250,7 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
 
     public override string TransformLabel(string label)
     {
-        if (!upgraded)
-        {
-            return label;
-        }
-
-        return $"{label} ({"TurretExtensions.TurretUpgradedText".Translate()})";
+        return !upgraded ? label : $"{label} ({"TurretExtensions.TurretUpgradedText".Translate()})";
     }
 
     public override void PostExposeData()

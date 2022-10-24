@@ -99,22 +99,17 @@ public class JobDriver_UpgradeTurret : JobDriver
         }
 
         text += " ";
-        if (yield >= 0.8f)
+        switch (yield)
         {
-            return text + "TurretExtensions.UpgradeFailResourceLossSmall".Translate();
+            case >= 0.8f:
+                return text + "TurretExtensions.UpgradeFailResourceLossSmall".Translate();
+            case >= 0.35f:
+                return text + "TurretExtensions.UpgradeFailResourceLossMedium".Translate();
+            case > 0f:
+                return text + "TurretExtensions.UpgradeFailResourceLossHigh".Translate();
+            default:
+                return text + "TurretExtensions.UpgradeFailResourceLossTotal".Translate();
         }
-
-        if (yield >= 0.35f)
-        {
-            return text + "TurretExtensions.UpgradeFailResourceLossMedium".Translate();
-        }
-
-        if (yield > 0f)
-        {
-            return text + "TurretExtensions.UpgradeFailResourceLossHigh".Translate();
-        }
-
-        return text + "TurretExtensions.UpgradeFailResourceLossTotal".Translate();
     }
 
     private void RefundResources(float yield)

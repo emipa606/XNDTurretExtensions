@@ -23,11 +23,8 @@ public class WorkGiver_ConstructUpgradedTurrets : WorkGiver_ConstructDeliverReso
             return null;
         }
 
-        if (!TurretExtensionsUtility.CanUpgradeTurret(t, pawn, def.workType, compUpgradable, forced))
-        {
-            return null;
-        }
-
-        return ResourceDeliverJobFor(pawn, compUpgradable, false);
+        return !TurretExtensionsUtility.CanUpgradeTurret(t, pawn, def.workType, compUpgradable, forced)
+            ? null
+            : ResourceDeliverJobFor(pawn, compUpgradable, false);
     }
 }

@@ -11,7 +11,7 @@ public static class Patch_VerbProperties
     {
         public static bool Prefix(VerbProperties __instance, Verb ownerVerb, Pawn attacker, ref float __result)
         {
-            if (!(ownerVerb.Caster is Building_TurretGun building_TurretGun))
+            if (ownerVerb.Caster is not Building_TurretGun building_TurretGun)
             {
                 return true;
             }
@@ -19,7 +19,8 @@ public static class Patch_VerbProperties
             __result =
                 TurretExtensionsUtility
                     .AdjustedTurretBurstWarmupTicks(
-                        building_TurretGun.def.building.turretBurstWarmupTime.SecondsToTicks(), building_TurretGun)
+                        building_TurretGun.def.building.turretBurstWarmupTime.RandomInRange.SecondsToTicks(),
+                        building_TurretGun)
                     .TicksToSeconds() + NonPublicMethods.Building_TurretGun_BurstCooldownTime(building_TurretGun) +
                 checked((__instance.burstShotCount - 1) * __instance.ticksBetweenBurstShots).TicksToSeconds();
             return false;

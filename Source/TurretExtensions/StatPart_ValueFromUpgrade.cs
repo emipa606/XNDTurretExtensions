@@ -11,7 +11,7 @@ public class StatPart_ValueFromUpgrade : StatPart
         var num = 1;
         try
         {
-            if (!req.HasThing || !(req.Thing.GetInnerIfMinified() is Building_Turret thing) ||
+            if (!req.HasThing || req.Thing.GetInnerIfMinified() is not Building_Turret thing ||
                 !thing.IsUpgradable(out var upgradableComp))
             {
                 return;

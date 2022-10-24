@@ -60,12 +60,7 @@ public static class Patch_Verb_Shoot
             }
 
             var compMannable = instance.Caster.TryGetComp<CompMannable>();
-            if (compMannable != null)
-            {
-                return compMannable.ManningPawn;
-            }
-
-            return null;
+            return compMannable?.ManningPawn;
         }
     }
 

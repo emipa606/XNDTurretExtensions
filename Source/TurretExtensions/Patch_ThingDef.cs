@@ -164,11 +164,13 @@ public static class Patch_ThingDef
             return buildingProps.turretBurstCooldownTime;
         }
 
-        private static float TurretWarmup(StatRequest req, BuildingProperties buildingProps)
+        private static FloatRange TurretWarmup(StatRequest req, BuildingProperties buildingProps)
         {
             if (req.Thing != null && req.Thing.IsUpgraded(out var upgradableComp))
             {
-                return buildingProps.turretBurstWarmupTime * upgradableComp.Props.turretBurstWarmupTimeFactor;
+                return new FloatRange(
+                    buildingProps.turretBurstWarmupTime.min * upgradableComp.Props.turretBurstWarmupTimeFactor,
+                    buildingProps.turretBurstWarmupTime.max * upgradableComp.Props.turretBurstWarmupTimeFactor);
             }
 
             return buildingProps.turretBurstWarmupTime;

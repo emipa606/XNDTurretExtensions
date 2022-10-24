@@ -29,13 +29,9 @@ public class StatPart_FromMannableTurret : StatPart
         var num = turret.IsUpgraded(out var upgradableComp)
             ? upgradableComp.Props.manningPawnShootingAccuracyOffset
             : turretFrameworkExtension.manningPawnShootingAccuracyOffset;
-        if (num == 0f)
-        {
-            return null;
-        }
-
-        return
-            $"{turret.def.LabelCap}: {num.ToStringByStyle(parentStat.ToStringStyleUnfinalized, ToStringNumberSense.Offset)}";
+        return num == 0f
+            ? null
+            : $"{turret.def.LabelCap}: {num.ToStringByStyle(parentStat.ToStringStyleUnfinalized, ToStringNumberSense.Offset)}";
     }
 
     private static bool ShouldApply(StatRequest req, out Building_Turret turret)

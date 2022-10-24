@@ -248,7 +248,7 @@ public static class TurretExtensionsUtility
                 if (compProperties3 != null)
                 {
                     stringBuilder.AppendLine(
-                        $"- {"PowerConsumption".Translate()}: {compProperties3.basePowerConsumption:F0} => {Mathf.Round(compProperties3.basePowerConsumption * compProperties.basePowerConsumptionFactor)}");
+                        $"- {"PowerConsumption".Translate()}: {compProperties3.PowerConsumption:F0} => {Mathf.Round(compProperties3.PowerConsumption * compProperties.basePowerConsumptionFactor)}");
                 }
             }
 
@@ -322,12 +322,7 @@ public static class TurretExtensionsUtility
             return false;
         }
 
-        if (workType == WorkTypeDefOf.Construction && pawn.skills.GetSkill(SkillDefOf.Construction).Level <
-            compUpgradable.Props.constructionSkillPrerequisite)
-        {
-            return false;
-        }
-
-        return true;
+        return workType != WorkTypeDefOf.Construction || pawn.skills.GetSkill(SkillDefOf.Construction).Level >=
+            compUpgradable.Props.constructionSkillPrerequisite;
     }
 }
