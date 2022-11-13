@@ -32,7 +32,11 @@ public class JobDriver_UpgradeTurret : JobDriver
         upgrade.tickAction = delegate
         {
             var actor = upgrade.actor;
-            actor.skills.Learn(SkillDefOf.Construction, 0.25f);
+            if (!actor.IsColonyMech)
+            {
+                actor.skills.Learn(SkillDefOf.Construction, 0.25f);
+            }
+
             var num = actor.GetStatValue(StatDefOf.ConstructionSpeed);
             if (TargetThingA.def.MadeFromStuff)
             {

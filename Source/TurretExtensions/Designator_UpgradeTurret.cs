@@ -119,6 +119,13 @@ public class Designator_UpgradeTurret : Designator
     private static void NotifyPlayerOfInsufficientSkill(Thing t)
     {
         var minimumSkill = t.TryGetComp<CompUpgradable>().Props.constructionSkillPrerequisite;
+
+        if (ModLister.BiotechInstalled && Find.CurrentMap.mapPawns.AllPawns.Any(pawn =>
+                pawn.IsColonyMech && pawn.RaceProps.mechFixedSkillLevel >= minimumSkill))
+        {
+            return;
+        }
+
         if (!Enumerable.Any(Find.CurrentMap.mapPawns.FreeColonists,
                 pawn => pawn.skills.GetSkill(SkillDefOf.Construction).Level >= minimumSkill))
         {

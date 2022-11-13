@@ -36,7 +36,9 @@ public class WorkGiver_UpgradeTurret : WorkGiver_Scanner
             return false;
         }
 
-        if (pawn.skills.GetSkill(SkillDefOf.Construction).Level < compUpgradable.Props.constructionSkillPrerequisite)
+        if (ModLister.BiotechInstalled && pawn.IsColonyMech && pawn.RaceProps.mechFixedSkillLevel <
+            compUpgradable.Props.constructionSkillPrerequisite || pawn.skills?.GetSkill(SkillDefOf.Construction).Level <
+            compUpgradable.Props.constructionSkillPrerequisite)
         {
             return false;
         }

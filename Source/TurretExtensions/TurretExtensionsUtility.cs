@@ -322,7 +322,10 @@ public static class TurretExtensionsUtility
             return false;
         }
 
-        return workType != WorkTypeDefOf.Construction || pawn.skills.GetSkill(SkillDefOf.Construction).Level >=
-            compUpgradable.Props.constructionSkillPrerequisite;
+        return workType != WorkTypeDefOf.Construction ||
+               pawn.skills?.GetSkill(SkillDefOf.Construction).Level >=
+               compUpgradable.Props.constructionSkillPrerequisite || ModLister.BiotechInstalled && pawn.IsColonyMech &&
+               pawn.RaceProps.mechFixedSkillLevel >=
+               compUpgradable.Props.constructionSkillPrerequisite;
     }
 }
