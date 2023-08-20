@@ -92,3 +92,4 @@ With XeoNovaDan retiring and moving on, I have decided to take on maintaining th
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2810485459]Last updated 2023-08-20

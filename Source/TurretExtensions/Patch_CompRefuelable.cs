@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 
 namespace TurretExtensions;
 
@@ -33,6 +34,11 @@ public static class Patch_CompRefuelable
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             return FuelCapacityTranspiler(instructions);
+        }
+
+        public static void Prefix(ref float amount, CompRefuelable __instance)
+        {
+            amount *= TurretExtensionsUtility.AdjustedFuelMultiplier(__instance.parent);
         }
     }
 
@@ -69,6 +75,11 @@ public static class Patch_CompRefuelable
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             return FuelCapacityTranspiler(instructions);
+        }
+
+        public static void Postfix(ref int __result, CompRefuelable __instance)
+        {
+            __result = Mathf.RoundToInt(__result / TurretExtensionsUtility.AdjustedFuelMultiplier(__instance.parent));
         }
     }
 }

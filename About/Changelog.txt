@@ -1,5 +1,8 @@
 # Changelog for XNDTurretExtensions
 
+1.4.3 - Made the refuel job respect the fuelMultiplierFactor setting
+
+
 1.4.2 - Biotech mechs should now be able to upgrade turrets
 
 

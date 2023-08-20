@@ -156,12 +156,9 @@ public static class Patch_ThingDef
                 return NonPublicMethods.Building_TurretGun_BurstCooldownTime(arg);
             }
 
-            if (!(buildingProps.turretBurstCooldownTime > 0f))
-            {
-                return buildingProps.turretGunDef.GetStatValueAbstract(StatDefOf.RangedWeapon_Cooldown);
-            }
-
-            return buildingProps.turretBurstCooldownTime;
+            return !(buildingProps.turretBurstCooldownTime > 0f)
+                ? buildingProps.turretGunDef.GetStatValueAbstract(StatDefOf.RangedWeapon_Cooldown)
+                : buildingProps.turretBurstCooldownTime;
         }
 
         private static FloatRange TurretWarmup(StatRequest req, BuildingProperties buildingProps)

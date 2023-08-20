@@ -24,12 +24,7 @@ public static class TurretExtensionsUtility
 
     public static bool IsUpgraded(this Thing thing, out CompUpgradable upgradableComp)
     {
-        if (thing.IsUpgradable(out upgradableComp))
-        {
-            return upgradableComp.upgraded;
-        }
-
-        return false;
+        return thing.IsUpgradable(out upgradableComp) && upgradableComp.upgraded;
     }
 
     public static bool AffectedByEMP(this Building_Turret turret)
@@ -50,6 +45,13 @@ public static class TurretExtensionsUtility
         }
 
         return baseFuelCapacity;
+    }
+
+    public static float AdjustedFuelMultiplier(Thing t)
+    {
+        return t.IsUpgraded(out var upgradableComp)
+            ? upgradableComp.Props.fuelMultiplierFactor
+            : 1f;
     }
 
     public static int AdjustedTurretBurstWarmupTicks(int warmupTicks, Building_Turret turret)
@@ -91,12 +93,9 @@ public static class TurretExtensionsUtility
 
     public static float FiringArcFor(Thing thing)
     {
-        if (!thing.IsUpgraded(out var upgradableComp))
-        {
-            return TurretFrameworkExtension.Get(thing.def).FiringArc;
-        }
-
-        return upgradableComp.Props.FiringArc;
+        return !thing.IsUpgraded(out var upgradableComp)
+            ? TurretFrameworkExtension.Get(thing.def).FiringArc
+            : upgradableComp.Props.FiringArc;
     }
 
     public static bool TryDrawFiringCone(Building_Turret turret, float distance)
