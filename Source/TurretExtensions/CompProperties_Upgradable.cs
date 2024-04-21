@@ -9,13 +9,36 @@ namespace TurretExtensions;
 [UsedImplicitly]
 public class CompProperties_Upgradable : CompProperties
 {
+    public readonly float basePowerConsumptionFactor = 1f;
+
+    public readonly float baseResourceDropPct = 0.75f;
+
+    public readonly float destroyedResourceDropPct = 0.25f;
+
+    public readonly float fuelCapacityFactor = 1f;
+
+    public readonly float fuelMultiplierFactor = 1f;
+
+    public readonly float turretBurstCooldownTimeFactor = 1f;
+
+    public readonly float turretBurstWarmupTimeFactor = 1f;
+
+    public readonly float turretTopDrawSize = -1f;
     private readonly EffecterDef upgradeEffect;
 
+    public readonly bool upgradeFailable = true;
+
+    public readonly float upgradeFailMajorChanceFactor = 2f;
+
+    public readonly float upgradeFailMinorResourcesRecovered = 0.5f;
+
+    public readonly float upgradeSuccessChanceFactor = 1f;
+
+    public readonly bool upgradeWorkFactorStuff = true;
+
+    public readonly int workToUpgrade = 1;
+
     public bool? affectedByEMP;
-
-    public float basePowerConsumptionFactor = 1f;
-
-    public float baseResourceDropPct = 0.75f;
 
     public bool? canForceAttack;
 
@@ -27,13 +50,7 @@ public class CompProperties_Upgradable : CompProperties
 
     public string description;
 
-    public float destroyedResourceDropPct = 0.25f;
-
     private float firingArc = -1f;
-
-    public float fuelCapacityFactor = 1f;
-
-    public float fuelMultiplierFactor = 1f;
 
     public GraphicData graphicData;
 
@@ -45,35 +62,17 @@ public class CompProperties_Upgradable : CompProperties
 
     public List<StatModifier> statOffsets;
 
-    public float turretBurstCooldownTimeFactor = 1f;
-
-    public float turretBurstWarmupTimeFactor = 1f;
-
     public ThingDef turretGunDef;
-
-    public float turretTopDrawSize = -1f;
 
     public Vector2 turretTopOffset;
 
     public string upgradedTurretDescription;
 
-    public bool upgradeFailable = true;
-
     public bool upgradeFailAlwaysMajor;
-
-    public float upgradeFailMajorChanceFactor = 2f;
 
     public FloatRange upgradeFailMajorDmgPctRange = new FloatRange(0.1f, 0.5f);
 
     public float upgradeFailMajorResourcesRecovered;
-
-    public float upgradeFailMinorResourcesRecovered = 0.5f;
-
-    public float upgradeSuccessChanceFactor = 1f;
-
-    public bool upgradeWorkFactorStuff = true;
-
-    public int workToUpgrade = 1;
 
     public CompProperties_Upgradable()
     {

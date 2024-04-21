@@ -8,7 +8,7 @@ namespace TurretExtensions;
 
 public class Designator_UpgradeTurret : Designator
 {
-    private readonly List<Building_Turret> designatedTurrets = new List<Building_Turret>();
+    private readonly List<Building_Turret> designatedTurrets = [];
 
     public Designator_UpgradeTurret()
     {

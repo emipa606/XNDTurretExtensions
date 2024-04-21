@@ -8,9 +8,9 @@ namespace TurretExtensions;
 
 public class CompUpgradable : ThingComp, IThingHolder, IConstructible
 {
-    private readonly List<ThingDefCountClass> cachedMaterialsNeeded = new List<ThingDefCountClass>();
+    private readonly List<ThingDefCountClass> cachedMaterialsNeeded = [];
 
-    public readonly List<ThingDefCountClass> finalCostList = new List<ThingDefCountClass>();
+    public readonly List<ThingDefCountClass> finalCostList = [];
     private Graphic cachedUpgradedGraphic;
 
     public ThingOwner innerContainer;
@@ -41,7 +41,7 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
         where thingCount < cost.count
         select cost).Any();
 
-    public List<ThingDefCountClass> MaterialsNeeded()
+    public List<ThingDefCountClass> TotalMaterialCost()
     {
         cachedMaterialsNeeded.Clear();
         foreach (var finalCost in finalCostList)
@@ -55,6 +55,24 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
         }
 
         return cachedMaterialsNeeded;
+    }
+
+    public bool IsCompleted()
+    {
+        return false;
+    }
+
+    public int ThingCountNeeded(ThingDef stuff)
+    {
+        foreach (var thingDefCountClass in TotalMaterialCost())
+        {
+            if (thingDefCountClass.thingDef == stuff)
+            {
+                return thingDefCountClass.count;
+            }
+        }
+
+        return 0;
     }
 
     public ThingDef EntityToBuildStuff()

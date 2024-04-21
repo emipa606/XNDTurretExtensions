@@ -5,12 +5,7 @@ using Verse;
 namespace TurretExtensions;
 
 [UsedImplicitly]
-public class CompMapTurretExtension : MapComponent
+public class CompMapTurretExtension(Map map) : MapComponent(map)
 {
-    public readonly List<CompUpgradable> comps = new List<CompUpgradable>();
-
-    public CompMapTurretExtension(Map map)
-        : base(map)
-    {
-    }
+    public readonly List<CompUpgradable> comps = [];
 }

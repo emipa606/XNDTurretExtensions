@@ -1,5 +1,8 @@
 # Changelog for XNDTurretExtensions
 
+1.5.0 - Updated for 1.5
+
+
 1.4.3 - Made the refuel job respect the fuelMultiplierFactor setting
 
 

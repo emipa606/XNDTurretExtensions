@@ -7,19 +7,19 @@ public class TurretFrameworkExtension : DefModExtension
 {
     private static readonly TurretFrameworkExtension DefaultValues = new TurretFrameworkExtension();
 
+    public readonly bool affectedByEMP = true;
+
     private readonly float firingArc = 360f;
 
-    public bool affectedByEMP = true;
+    public readonly bool useManningPawnAimingDelayFactor = true;
+
+    public readonly bool useManningPawnShootingAccuracy = true;
 
     public bool canForceAttack;
 
     public TurretGunFaceDirection gunFaceDirectionOnSpawn;
 
     public float manningPawnShootingAccuracyOffset;
-
-    public bool useManningPawnAimingDelayFactor = true;
-
-    public bool useManningPawnShootingAccuracy = true;
 
     public float FiringArc => Mathf.Clamp(firingArc, 0f, 360f);
 
