@@ -13,10 +13,7 @@ public static class StaticConstructorClass
                      { IsTurret: true } && (tDef.statBases == null ||
                                             !tDef.statBases.Any(s => s.stat == StatDefOf.ShootingAccuracyTurret))))
         {
-            if (item.statBases == null)
-            {
-                item.statBases = [];
-            }
+            item.statBases ??= [];
 
             item.statBases.Add(new StatModifier
             {

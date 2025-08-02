@@ -70,7 +70,7 @@ public class CompProperties_Upgradable : CompProperties
 
     public bool upgradeFailAlwaysMajor;
 
-    public FloatRange upgradeFailMajorDmgPctRange = new FloatRange(0.1f, 0.5f);
+    public FloatRange upgradeFailMajorDmgPctRange = new(0.1f, 0.5f);
 
     public float upgradeFailMajorResourcesRecovered;
 
@@ -85,10 +85,7 @@ public class CompProperties_Upgradable : CompProperties
     {
         base.ResolveReferences(parentDef);
         var turretFrameworkExtension = TurretFrameworkExtension.Get(parentDef);
-        if (!canForceAttack.HasValue)
-        {
-            canForceAttack = turretFrameworkExtension.canForceAttack;
-        }
+        canForceAttack ??= turretFrameworkExtension.canForceAttack;
 
         if (firingArc == -1f)
         {

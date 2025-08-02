@@ -23,7 +23,7 @@ public class Designator_UpgradeTurret : Designator
 
     protected override DesignationDef Designation => DesignationDefOf.UpgradeTurret;
 
-    public override int DraggableDimensions => 2;
+    public override DrawStyleCategoryDef DrawStyleCategory => DrawStyleCategoryDefOf.Orders;
 
     public override AcceptanceReport CanDesignateCell(IntVec3 loc)
     {

@@ -5,7 +5,7 @@ namespace TurretExtensions;
 
 public class TurretFrameworkExtension : DefModExtension
 {
-    private static readonly TurretFrameworkExtension DefaultValues = new TurretFrameworkExtension();
+    private static readonly TurretFrameworkExtension DefaultValues = new();
 
     public readonly bool affectedByEMP = true;
 

@@ -17,7 +17,7 @@ public static class HarmonyPatches
         harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
         var type = ManualPatch_Gizmo_RefuelableFuelStatus.manual_GizmoOnGUI_Delegate.delegateType =
-            typeof(Gizmo_RefuelableFuelStatus).GetNestedTypes(BindingFlags.Instance | BindingFlags.NonPublic).First();
+            typeof(Command_SetTargetFuelLevel).GetNestedTypes(BindingFlags.Instance | BindingFlags.NonPublic).First();
 
         harmonyInstance.Patch(type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).First(),
             null, null,

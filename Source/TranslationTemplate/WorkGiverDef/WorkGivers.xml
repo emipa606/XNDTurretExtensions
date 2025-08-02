@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: construct upgraded turrets -->
+  <ConstructUpgradedTurrets.label>construct upgraded turrets</ConstructUpgradedTurrets.label>
+  <!-- EN: working on -->
+  <ConstructUpgradedTurrets.gerund>working on</ConstructUpgradedTurrets.gerund>
+  <!-- EN: work on -->
+  <ConstructUpgradedTurrets.verb>work on</ConstructUpgradedTurrets.verb>
+  <!-- EN: deliver resources to turrets -->
+  <DeliverResourcesToTurrets.label>deliver resources to turrets</DeliverResourcesToTurrets.label>
+  <!-- EN: delivering to -->
+  <DeliverResourcesToTurrets.gerund>delivering to</DeliverResourcesToTurrets.gerund>
+  <!-- EN: deliver to -->
+  <DeliverResourcesToTurrets.verb>deliver to</DeliverResourcesToTurrets.verb>
+  <!-- EN: upgrade turrets -->
+  <UpgradeTurrets.label>upgrade turrets</UpgradeTurrets.label>
+  <!-- EN: upgrading -->
+  <UpgradeTurrets.gerund>upgrading</UpgradeTurrets.gerund>
+  <!-- EN: upgrade -->
+  <UpgradeTurrets.verb>upgrade</UpgradeTurrets.verb>
+</LanguageData>

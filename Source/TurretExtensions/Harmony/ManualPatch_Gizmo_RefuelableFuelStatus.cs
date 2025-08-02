@@ -22,7 +22,7 @@ public static class ManualPatch_Gizmo_RefuelableFuelStatus
             var fuelCapacityInfo = AccessTools.Field(typeof(CompProperties_Refuelable), "fuelCapacity");
             var thisInfo = AccessTools.Field(delegateType, "<>4__this");
             var adjustedFuelCapacityInfo =
-                AccessTools.Method(typeof(manual_GizmoOnGUI_Delegate), "AdjustedFuelCapacity");
+                AccessTools.Method(typeof(manual_GizmoOnGUI_Delegate), nameof(AdjustedFuelCapacity));
             foreach (var item in list)
             {
                 var codeInstruction = item;
@@ -55,7 +55,7 @@ public static class ManualPatch_Gizmo_RefuelableFuelStatus
             }
         }
 
-        private static float AdjustedFuelCapacity(float original, Gizmo_RefuelableFuelStatus instance)
+        private static float AdjustedFuelCapacity(float original, Command_SetTargetFuelLevel instance)
         {
             return TurretExtensionsUtility.AdjustedFuelCapacity(original, instance.refuelable.parent);
         }

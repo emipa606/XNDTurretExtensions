@@ -11,7 +11,8 @@ public static class ManualPatch_CompRefuelable
     public static IEnumerable<CodeInstruction> FuelCapacityTranspiler(IEnumerable<CodeInstruction> instructions)
     {
         var list = instructions.ToList();
-        var adjustedFuelCapacity = AccessTools.Method(typeof(TurretExtensionsUtility), "AdjustedFuelCapacity");
+        var adjustedFuelCapacity = AccessTools.Method(typeof(TurretExtensionsUtility),
+            nameof(TurretExtensionsUtility.AdjustedFuelCapacity));
         foreach (var item in list)
         {
             var codeInstruction = item;

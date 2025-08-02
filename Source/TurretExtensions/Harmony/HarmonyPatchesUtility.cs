@@ -28,16 +28,6 @@ public static class HarmonyPatchesUtility
         return true;
     }
 
-    public static bool LoadFieldInstruction(CodeInstruction instruction)
-    {
-        if (!(instruction.opcode == OpCodes.Ldfld))
-        {
-            return instruction.opcode == OpCodes.Ldflda;
-        }
-
-        return true;
-    }
-
     public static bool BranchingInstruction(CodeInstruction instruction)
     {
         if (!(instruction.opcode == OpCodes.Bge_Un) && !(instruction.opcode == OpCodes.Bge_Un_S) &&

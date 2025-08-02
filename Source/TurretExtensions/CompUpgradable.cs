@@ -90,19 +90,16 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
         return innerContainer;
     }
 
-    public override void PostDeSpawn(Map map)
+    public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
     {
-        base.PostDeSpawn(map);
+        base.PostDeSpawn(map, mode);
         map.GetComponent<CompMapTurretExtension>()?.comps.Remove(this);
     }
 
     public override void PostSpawnSetup(bool respawningAfterLoad)
     {
         base.PostSpawnSetup(respawningAfterLoad);
-        if (innerContainer == null)
-        {
-            innerContainer = new ThingOwner<Thing>(this, false);
-        }
+        innerContainer ??= new ThingOwner<Thing>(this, false);
 
         parent.Map.GetComponent<CompMapTurretExtension>()?.comps.Add(this);
     }
@@ -115,10 +112,7 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
         }
 
         base.Initialize(props);
-        if (innerContainer == null)
-        {
-            innerContainer = new ThingOwner<Thing>(this, false);
-        }
+        innerContainer ??= new ThingOwner<Thing>(this, false);
 
         ResolveCostList();
         if (upgradeWorkTotal == -1f)

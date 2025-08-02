@@ -20,7 +20,8 @@ public static class ManualPatch_ThingDef
             var list = instructions.ToList();
             var turretGunDefInfo = AccessTools.Field(typeof(BuildingProperties), "turretGunDef");
             var reqInfo = AccessTools.Field(enumeratorType, "req");
-            var actualTurretGunDefInfo = AccessTools.Method(typeof(manual_SpecialDisplayStats), "ActualTurretGunDef");
+            var actualTurretGunDefInfo =
+                AccessTools.Method(typeof(manual_SpecialDisplayStats), nameof(ActualTurretGunDef));
             var done = false;
             foreach (var item in list)
             {
