@@ -26,11 +26,11 @@ public class CompProperties_Upgradable : CompProperties
     public readonly float turretTopDrawSize = -1f;
     private readonly EffecterDef upgradeEffect;
 
-    public readonly bool upgradeFailable = true;
-
     public readonly float upgradeFailMajorChanceFactor = 2f;
 
     public readonly float upgradeFailMinorResourcesRecovered = 0.5f;
+
+    public readonly bool upgradeFailable = true;
 
     public readonly float upgradeSuccessChanceFactor = 1f;
 
@@ -66,13 +66,13 @@ public class CompProperties_Upgradable : CompProperties
 
     public Vector2 turretTopOffset;
 
-    public string upgradedTurretDescription;
-
     public bool upgradeFailAlwaysMajor;
 
     public FloatRange upgradeFailMajorDmgPctRange = new(0.1f, 0.5f);
 
     public float upgradeFailMajorResourcesRecovered;
+
+    public string upgradedTurretDescription;
 
     public CompProperties_Upgradable()
     {

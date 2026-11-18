@@ -48,12 +48,7 @@ public static class TurretTop_DrawTurret
 
     private static Vector2 TurretTopOffsetToUse(Vector2 original, Building_Turret turret)
     {
-        if (!turret.IsUpgraded(out var upgradableComp))
-        {
-            return original;
-        }
-
-        return upgradableComp.Props.turretTopOffset;
+        return !turret.IsUpgraded(out var upgradableComp) ? original : upgradableComp.Props.turretTopOffset;
     }
 
     private static float TurretTopDrawSizeToUse(float original, Building_Turret turret)

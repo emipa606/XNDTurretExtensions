@@ -17,12 +17,12 @@ public static class PlaceWorker_ShowTurretRadius_AllowsPlacing
 
         var verbProperties =
             ((ThingDef)checkingDef).building.turretGunDef.Verbs.Find(v => v.verbClass == typeof(Verb_Shoot));
-        if (verbProperties.range > 0f)
+        if (verbProperties is { range: > 0f })
         {
             TurretExtensionsUtility.TryDrawFiringCone(loc, rot, verbProperties.range, firingArc);
         }
 
-        if (verbProperties.minRange > 0f)
+        if (verbProperties is { minRange: > 0f })
         {
             TurretExtensionsUtility.TryDrawFiringCone(loc, rot, verbProperties.minRange, firingArc);
         }

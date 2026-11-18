@@ -11,15 +11,14 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
     private readonly List<ThingDefCountClass> cachedMaterialsNeeded = [];
 
     public readonly List<ThingDefCountClass> finalCostList = [];
-    private Graphic cachedUpgradedGraphic;
 
     public ThingOwner innerContainer;
-
-    public bool upgraded;
 
     public float upgradeWorkDone;
 
     public float upgradeWorkTotal = -1f;
+
+    public bool upgraded;
 
     public CompProperties_Upgradable Props => (CompProperties_Upgradable)props;
 
@@ -29,7 +28,7 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
         {
             if (Props.graphicData != null)
             {
-                return cachedUpgradedGraphic ?? (cachedUpgradedGraphic = Props.graphicData.GraphicColoredFor(parent));
+                return field ?? (field = Props.graphicData.GraphicColoredFor(parent));
             }
 
             return null;
@@ -252,7 +251,8 @@ public class CompUpgradable : ThingComp, IThingHolder, IConstructible
         var compRefuelable = parent.TryGetComp<CompRefuelable>();
         if (compRefuelable != null)
         {
-            var num = (float)NonPublicFields.CompRefuelable_fuel.GetValue(compRefuelable) * Props.fuelMultiplierFactor;
+            var num = (float)(NonPublicFields.CompRefuelable_fuel.GetValue(compRefuelable) ?? 1f) *
+                      Props.fuelMultiplierFactor;
             NonPublicFields.CompRefuelable_fuel.SetValue(compRefuelable, num);
         }
 

@@ -6,4 +6,32 @@
     <BuildType Name="Release" />
   </Configurations>
   <Project Path="TurretExtensions/TurretExtensions.csproj" />
+  <Folder Name="/XML/1.7/Patches/Stats/">
+    <File Path="../1.7/Patches/Stats/Stats_Basics_General.xml" />
+    <File Path="../1.7/Patches/Stats/Stats_Pawns_Combat.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/Misc/RecordDefs/">
+    <File Path="../1.7/Defs/Misc/RecordDefs/Records_Misc.xml" />
+  </Folder>
+  <Folder Name="/XML/Languages/English/Keyed/">
+    <File Path="../Languages/English/Keyed/Keyed_General.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Patches/Misc/Designations/">
+    <File Path="../1.7/Patches/Misc/Designations/DesignationCategories.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/WorkGiverDefs/">
+    <File Path="../1.7/Defs/WorkGiverDefs/WorkGivers.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/Misc/Designations/">
+    <File Path="../1.7/Defs/Misc/Designations/Designations.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/Stats/">
+    <File Path="../1.7/Defs/Stats/StatCategories.xml" />
+  </Folder>
+  <Folder Name="/XML/1.7/Defs/JobDefs/">
+    <File Path="../1.7/Defs/JobDefs/Jobs_Work.xml" />
+  </Folder>
+  <Folder Name="/XML/About/">
+    <File Path="../About/about.xml" />
+  </Folder>
 </Solution>

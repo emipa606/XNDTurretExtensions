@@ -1,15 +1,15 @@
 # [[XND] Turret Extensions (Continued)](https://steamcommunity.com/sharedfiles/filedetails/?id=2810485459)
 
-![Image](https://i.imgur.com/buuPQel.png)
+![Image](https://img.litet.net/logos/Info.png)
 
 Update of XeoNovaDans mod
 https://steamcommunity.com/sharedfiles/filedetails/?id=1496122245
 based on Netrve updated version
 https://steamcommunity.com/sharedfiles/filedetails/?id=2201064941
 
-![Image](https://i.imgur.com/pufA0kM.png)
+![Image](https://img.litet.net/logos/Notice.png)
 	
-![Image](https://i.imgur.com/Z4GOv8H.png)
+![Image](https://img.litet.net/logos/OriginalDescription.png)
 
 # **Overview**
 
@@ -41,7 +41,7 @@ All of the above can now be done *purely* in XML; not a single line of C# is req
 If you want to spice up your mod's thumbnail a bit, you can download a 'Powered by Turret Extensions' overlay image from Dropbox [**here**](https://www.dropbox.com/s/s57fw90729uf0iz/TurretExtensionsPreviewOverlays.zip?dl=0) - with and without drop shadows.
 Preview:
 
-![Image](https://i.imgur.com/aG1rVWZ.png)
+![Image](https://img.litet.net/aG1rVWZ.png)
 
 If you have any suggestions or other constructive feedback, feel free to let me know!
 
@@ -74,17 +74,17 @@ Big thanks to **Mehni, erdelf, Lanilor, ChJees, Spdskatr, Telefonmast and Furiou
 
 Note: I recently started a new job and I'm still adjusting. Updates and responses could be delayed.
 
-Turret Extensions - Continuum is the official continuation of Turret Extensions by XeoNovaDan. (Proof: https://i.imgur.com/CyqSjAG.png)
+Turret Extensions - Continuum is the official continuation of Turret Extensions by XeoNovaDan. (Proof: https://img.litet.net/CyqSjAG.png)
 
 With XeoNovaDan retiring and moving on, I have decided to take on maintaining this and maybe some other of his mods for the foreseeable future. It features performance improvements and other updates, with additional features planned too.
 
-![Image](https://i.imgur.com/PwoNOj4.png)
+![Image](https://img.litet.net/logos/ReportingIssues.png)
 
 
 
 -  See if the the error persists if you just have this mod and its requirements active.
 -  If not, try adding your other mods until it happens again.
--  Post your error-log using the [Log Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404) or the standalone [Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404) and command Ctrl+F12
+-  Always post your log using the [Log Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404)
 -  For best support, please use the Discord-channel for error-reporting.
 -  Do not report errors by making a discussion-thread, I get no notification of that.
 -  If you have the solution for a problem, please post it to the GitHub repository.
@@ -92,4 +92,4 @@ With XeoNovaDan retiring and moving on, I have decided to take on maintaining th
 
  
 
-[![Image](https://img.shields.io/github/v/release/emipa606/XNDTurretExtensions?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/2810485459) | tags: turrets,  framework
+[![Image](https://img.shields.io/github/v/release/emipa606/XNDTurretExtensions?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/2810485459) | framework, turrets

@@ -16,15 +16,18 @@ public static class TurretExtensionsUtility
         return upgradableCompProps != null;
     }
 
-    public static bool IsUpgradable(this Thing thing, out CompUpgradable upgradableComp)
+    extension(Thing thing)
     {
-        upgradableComp = thing.TryGetComp<CompUpgradable>();
-        return upgradableComp != null;
-    }
+        public bool IsUpgradable(out CompUpgradable upgradableComp)
+        {
+            upgradableComp = thing.TryGetComp<CompUpgradable>();
+            return upgradableComp != null;
+        }
 
-    public static bool IsUpgraded(this Thing thing, out CompUpgradable upgradableComp)
-    {
-        return thing.IsUpgradable(out upgradableComp) && upgradableComp.upgraded;
+        public bool IsUpgraded(out CompUpgradable upgradableComp)
+        {
+            return thing.IsUpgradable(out upgradableComp) && upgradableComp.upgraded;
+        }
     }
 
     public static bool AffectedByEMP(this Building_Turret turret)
@@ -81,14 +84,17 @@ public static class TurretExtensionsUtility
         return $"{degrees:0.#}°";
     }
 
-    public static bool WithinFiringArcOf(this IntVec3 pos, Thing thing)
+    extension(IntVec3 pos)
     {
-        return pos.WithinFiringArcOf(thing.Position, thing.Rotation, FiringArcFor(thing));
-    }
+        public bool WithinFiringArcOf(Thing thing)
+        {
+            return pos.WithinFiringArcOf(thing.Position, thing.Rotation, FiringArcFor(thing));
+        }
 
-    private static bool WithinFiringArcOf(this IntVec3 pos, IntVec3 pos2, Rot4 rot, float firingArc)
-    {
-        return GenGeo.AngleDifferenceBetween(rot.AsAngle, (pos - pos2).AngleFlat) <= firingArc / 2f;
+        private bool WithinFiringArcOf(IntVec3 pos2, Rot4 rot, float firingArc)
+        {
+            return GenGeo.AngleDifferenceBetween(rot.AsAngle, (pos - pos2).AngleFlat) <= firingArc / 2f;
+        }
     }
 
     public static float FiringArcFor(Thing thing)
@@ -112,7 +118,7 @@ public static class TurretExtensionsUtility
 
         if (distance > GenRadial.MaxRadialPatternRadius)
         {
-            if ((bool)NonPublicFields.GenDraw_maxRadiusMessaged.GetValue(null))
+            if ((bool)(NonPublicFields.GenDraw_maxRadiusMessaged.GetValue(null) ?? false))
             {
                 return false;
             }
@@ -123,14 +129,14 @@ public static class TurretExtensionsUtility
         }
 
         var list = (List<IntVec3>)NonPublicFields.GenDraw_ringDrawCells.GetValue(null);
-        list.Clear();
+        list?.Clear();
         var num = GenRadial.NumCellsInRadius(distance);
         for (var i = 0; i < num; i = checked(i + 1))
         {
             var intVec = centre + GenRadial.RadialPattern[i];
             if (intVec.WithinFiringArcOf(centre, rot, arc))
             {
-                list.Add(intVec);
+                list?.Add(intVec);
             }
         }
 
@@ -279,7 +285,7 @@ public static class TurretExtensionsUtility
             if (turretFrameworkExtension.canForceAttack != compProperties.canForceAttack &&
                 !thingDef.HasComp(typeof(CompMannable)))
             {
-                stringBuilder.AppendLine(compProperties.canForceAttack.Value
+                stringBuilder.AppendLine(compProperties.canForceAttack != null && compProperties.canForceAttack.Value
                     ? $"- {"TurretExtensions.TurretManuallyControllable".Translate()}"
                     : $"- {"TurretExtensions.TurretNotManuallyControllable".Translate()}");
             }
