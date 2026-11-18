@@ -9,6 +9,9 @@ public class TurretFrameworkExtension : DefModExtension
 
     public readonly bool affectedByEMP = true;
 
+    // ReSharper disable once ReplaceWithFieldKeyword
+    private readonly float firingArc = 360f;
+
     public readonly bool useManningPawnAimingDelayFactor = true;
 
     public readonly bool useManningPawnShootingAccuracy = true;
@@ -19,10 +22,7 @@ public class TurretFrameworkExtension : DefModExtension
 
     public float manningPawnShootingAccuracyOffset;
 
-    public float FiringArc
-    {
-        get => Mathf.Clamp(field, 0f, 360f);
-    } = 360f;
+    public float FiringArc => Mathf.Clamp(firingArc, 0f, 360f);
 
     public static TurretFrameworkExtension Get(Def def)
     {
